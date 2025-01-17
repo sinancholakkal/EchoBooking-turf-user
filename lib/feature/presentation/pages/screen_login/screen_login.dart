@@ -1,9 +1,13 @@
 import 'package:echo_booking/core/constent/text_constend.dart';
 import 'package:echo_booking/core/theme/colors.dart';
+import 'package:echo_booking/feature/presentation/pages/sign_up/screen_sign_up.dart';
 import 'package:echo_booking/feature/presentation/widgets/custom_button.dart';
 import 'package:echo_booking/feature/presentation/widgets/heading_text.dart';
+import 'package:echo_booking/feature/presentation/widgets/rich_text_widget.dart';
+import 'package:echo_booking/feature/presentation/widgets/text_form_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ScreenLogin extends StatelessWidget {
   const ScreenLogin({super.key});
@@ -79,51 +83,27 @@ class ScreenLogin extends StatelessWidget {
               SizedBox(
                 height: screenHeight * 0.10,
               ),
+              //Login button------------
               Center(
                 child: CustomButton(
                   screenWidth: screenWidth,
-                  text: 'Sign up',
+                  text: textLoginButton,
                 ),
               ),
               SizedBox(height: 08,),
               Center(
-                child: RichText(
-                    text: TextSpan(text: "Don’t have an account?", children: [
-                  TextSpan(
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold
-                    ),
-                      text: "Sign Up",
-                      recognizer: TapGestureRecognizer()..onTap = () {})
-                ])),
+                child: RichTextWidget(
+                  text: "Don’t have an account?",
+                  eventText: "Sign up",
+                  onTap: (){
+                    Get.off(ScreenSignUp(),transition: Transition.cupertino);
+                  },
+                ),
               )
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class TextFormFieldWidget extends StatelessWidget {
-  const TextFormFieldWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      decoration: InputDecoration(
-          border: InputBorder.none,
-          filled: true,
-          fillColor: kWhite,
-          //border: UnderlineInputBorder(),
-
-          //label: Text(textUserName),
-          focusedBorder:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(26)),
-          enabledBorder:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(26))),
     );
   }
 }
