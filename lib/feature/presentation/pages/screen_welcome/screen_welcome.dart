@@ -1,5 +1,5 @@
-import 'package:echo_booking/core/constent/image_constand.dart';
-import 'package:echo_booking/core/constent/text_constend.dart';
+import 'package:echo_booking/core/constent/image/image_constand.dart';
+import 'package:echo_booking/core/constent/text/text_constend.dart';
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/feature/presentation/pages/sign_up/screen_sign_up.dart';
 import 'package:echo_booking/feature/presentation/widgets/custom_button.dart';

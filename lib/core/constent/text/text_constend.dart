@@ -7,3 +7,6 @@ const textLoginButton = "Login";
 
 //sign up
 const textSignUpButton = "Sign up";
+
+//Home tab 
+const popularText = "Popular";

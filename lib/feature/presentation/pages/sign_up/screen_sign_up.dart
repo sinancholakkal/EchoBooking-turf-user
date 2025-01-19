@@ -1,4 +1,4 @@
-import 'package:echo_booking/core/constent/text_constend.dart';
+import 'package:echo_booking/core/constent/text/text_constend.dart';
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_login/screen_login.dart';
 import 'package:echo_booking/feature/presentation/widgets/custom_button.dart';

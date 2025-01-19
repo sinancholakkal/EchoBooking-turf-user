@@ -62,6 +62,7 @@ flutter:
   assets:
     - asset/beckham-david-male-males-wallpaper-preview-removebg-preview.png
     - asset/icons/icons8-google-48.png
+    - asset/icons/football.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
