@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:echo_booking/core/constent/size/size.dart';
 import 'package:echo_booking/core/theme/colors.dart';
-import 'package:echo_booking/feature/domain/auth_service.dart';
+import 'package:echo_booking/domain/repository/auth_service.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/home_tab.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_welcome/screen_welcome.dart';
 import 'package:flutter/cupertino.dart';
@@ -146,7 +146,10 @@ class _ScreenHomeState extends State<ScreenHome> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(onPressed:null,child: Icon(Icons.logout_rounded),),
+        floatingActionButton: FloatingActionButton(onPressed: (){
+          AuthService().signOut();
+          Get.off(()=>ScreenWelcome(),transition: Transition.cupertino);
+        },child: Icon(Icons.logout_rounded),),
       ),
     );
   }
