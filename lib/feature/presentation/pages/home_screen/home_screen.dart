@@ -1,9 +1,14 @@
+import 'dart:developer';
+
 import 'package:echo_booking/core/constent/size/size.dart';
 import 'package:echo_booking/core/theme/colors.dart';
+import 'package:echo_booking/feature/domain/auth_service.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/home_tab.dart';
+import 'package:echo_booking/feature/presentation/pages/screen_welcome/screen_welcome.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:get/get.dart';
 
 class ScreenHome extends StatefulWidget {
   const ScreenHome({super.key});
@@ -13,6 +18,7 @@ class ScreenHome extends StatefulWidget {
 }
 
 class _ScreenHomeState extends State<ScreenHome> {
+  final _auth = AuthService();
   double tabOpacity = 1;
   double tabRadius = 20;
   bool iconVisible = true;
@@ -37,7 +43,7 @@ class _ScreenHomeState extends State<ScreenHome> {
                 // floating: false,
                 // pinned: true,
                 toolbarHeight: kTabLabelPadding.horizontal,
-                expandedHeight: screenHeight *0.20,
+                expandedHeight: 205,
                 floating: false,
                 pinned: true,
                 backgroundColor: backGroundColor,
@@ -55,6 +61,7 @@ class _ScreenHomeState extends State<ScreenHome> {
                             SizedBox(
                               height: screenHeight * 0.05,
                             ),
+                            
                             // account icon button-----------------
                             Align(
                               alignment: Alignment.topRight,
@@ -93,7 +100,7 @@ class _ScreenHomeState extends State<ScreenHome> {
                       dividerColor: Colors.transparent,
                       indicatorSize: TabBarIndicatorSize.tab,
                       indicator: BoxDecoration(
-                        color: const Color.fromARGB(255, 41, 38, 236),
+                        color: buttonColor,
                         borderRadius: BorderRadius.circular(tabRadius),
                         boxShadow: [
                           BoxShadow(
@@ -139,6 +146,7 @@ class _ScreenHomeState extends State<ScreenHome> {
             ],
           ),
         ),
+        floatingActionButton: FloatingActionButton(onPressed:null,child: Icon(Icons.logout_rounded),),
       ),
     );
   }

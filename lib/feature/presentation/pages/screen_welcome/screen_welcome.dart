@@ -54,7 +54,7 @@ class ScreenWelcome extends StatelessWidget {
           Center(
             child: CustomButton(
               onTap: (){
-                Get.to(ScreenLogin(),transition: Transition.cupertino);
+                Get.off(()=>ScreenLogin(),transition: Transition.cupertino);
               },
               screenWidth: screenWidth,
               text: textLoginButton,
@@ -67,7 +67,7 @@ class ScreenWelcome extends StatelessWidget {
           Center(
             child: CustomButton(
               onTap: (){
-                Get.to(ScreenSignUp(),transition: Transition.cupertino);
+                Get.off(()=>ScreenSignUp(),transition: Transition.cupertino);
               },
               screenWidth: screenWidth,
               text: 'Sign up',

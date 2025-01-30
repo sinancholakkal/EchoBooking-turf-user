@@ -1,6 +1,12 @@
+import 'package:echo_booking/core/constent/size/size.dart';
 import 'package:echo_booking/core/constent/text/text_constend.dart';
 import 'package:echo_booking/core/theme/colors.dart';
+import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/card_heading.dart';
+import 'package:echo_booking/feature/presentation/widgets/custom_button.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+import 'popular_card.dart';
 
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});
@@ -11,28 +17,39 @@ class HomeTab extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  width: screenWidth *0.06,
-                  child: Image.asset("asset/icons/football.png"),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: Text(popularText,style: TextStyle(
-                    color: kWhite,
-                    fontSize: 20
-                  ),),
-                )
-              ],
+          height10,
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: CardHead(text: popularText,),
+          ),
+          height10,
+          // popular card==================================
+          SizedBox(
+            height: screenWidth * 0.78,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: PopularCard(
+                    screenWidth: screenWidth,
+                  ),
+                );
+              },
+              itemCount: 4,
             ),
-          )
+          ),
+          SizedBox(height: 25,),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: CardHead(text: listOfTurf,),
+          ),
         ],
       ),
     );
   }
 }
+
+

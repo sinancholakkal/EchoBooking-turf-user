@@ -1,46 +1,58 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:echo_booking/core/constent/text/text_constend.dart';
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/core/until/validation.dart';
 import 'package:echo_booking/feature/domain/auth_service.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/home_screen.dart';
-import 'package:echo_booking/feature/presentation/pages/sign_up/screen_sign_up.dart';
+import 'package:echo_booking/feature/presentation/pages/screen_login/screen_login.dart';
 import 'package:echo_booking/feature/presentation/widgets/custom_button.dart';
 import 'package:echo_booking/feature/presentation/widgets/heading_text.dart';
 import 'package:echo_booking/feature/presentation/widgets/rich_text_widget.dart';
 import 'package:echo_booking/feature/presentation/widgets/text_form_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ScreenLogin extends StatefulWidget {
-  const ScreenLogin({super.key});
+class ScreenUserDetails extends StatefulWidget {
+  final User user;
+  const ScreenUserDetails({super.key, required this.user});
 
   @override
-  State<ScreenLogin> createState() => _ScreenLoginState();
+  State<ScreenUserDetails> createState() => _ScreenSignUpState();
 }
 
-class _ScreenLoginState extends State<ScreenLogin> {
-  late TextEditingController _email;
-  late TextEditingController _password;
+class _ScreenSignUpState extends State<ScreenUserDetails> {
+  late TextEditingController _fullName;
+  late TextEditingController _phone;
+  late TextEditingController _address;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _auth = AuthService();
 
 
   @override
   void initState() {
-    _email = TextEditingController();
-    _password = TextEditingController();
+    _fullName = TextEditingController();
+    _phone = TextEditingController();
+    _address = TextEditingController();
     super.initState();
   }
-  @override
-  void dispose() {
-    _email.dispose();
-    _password.dispose();
-    super.dispose();
+
+  Future<void>storedetailse()async{
+    print("===================================storeddetails called");
+    FirebaseFirestore.instance.collection("userApp").doc(widget.user.uid).set({
+      "uid":widget.user.uid,
+      "name":_fullName.text,
+      "phone" : _phone.text,
+      "address":_address.text
+    });
   }
+
   @override
   Widget build(BuildContext context) {
+    log(widget.user.uid);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -54,7 +66,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: 60,
+                  height: screenHeight * 0.05,
                 ),
                 Align(
                   alignment: Alignment.topLeft,
@@ -63,30 +75,59 @@ class _ScreenLoginState extends State<ScreenLogin> {
                   ),
                 ),
                 SizedBox(
-                  height: 70,
+                  height: screenHeight * 0.06,
                 ),
                 Align(
                   alignment: Alignment.topLeft,
                   child: HeadingText(
-                    text: "Welcome Back!",
+                    text: "Personal Details",
                   ),
                 ),
+
+                //Full name----------------
                 SizedBox(
-                  height: 10,
-                ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    "Login to continue",
-                    style: TextStyle(color: kWhite,fontSize: 16),
-                  ),
-                ),
-                //E-mail----------------
-                SizedBox(
-                  height: screenHeight * 0.05,
+                  height: screenHeight * 0.03,
                 ),
                 Text(
-                  textUserName,
+                  fullNameText,
+                  style: TextStyle(
+                      color: kWhite, fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: screenHeight * 0.01,
+                ),
+                TextFormFieldWidget(
+                  validator: (value) {
+                    return Validation.nameValidate(value: value);
+                  },
+                  controller: _fullName,
+                ),
+
+                //Phone -------------
+                SizedBox(
+                  height: screenHeight * 0.03,
+                ),
+                Text(
+                  phoneText,
+                  style: TextStyle(
+                      color: kWhite, fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: screenHeight * 0.01,
+                ),
+                TextFormFieldWidget(
+                  validator: (value) {
+                    return Validation.phoneNumberValidate(value: value);
+                  },
+                  controller: _phone,
+                ),
+
+                //Address---------------
+                SizedBox(
+                  height: screenHeight * 0.03,
+                ),
+                Text(
+                  addressText,
                   style: TextStyle(
                       color: kWhite, fontSize: 20, fontWeight: FontWeight.bold),
                 ),
@@ -95,59 +136,33 @@ class _ScreenLoginState extends State<ScreenLogin> {
                 ),
                 TextFormFieldWidget(
                   validator: (value){
-                    return Validation.emailValidation(value);
+                    return Validation.addressValidate(value: value);
                   },
-                  controller: _email,
+                  controller: _address,
                 ),
-            
-                //password-------------
+
                 SizedBox(
                   height: screenHeight * 0.05,
                 ),
-                Text(
-                  textPassword,
-                  style: TextStyle(
-                      color: kWhite, fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: screenHeight * 0.01,
-                ),
-                TextFormFieldWidget(
-                  validator: (value){
-                    return Validation.passWordValidation(value);
-                  },
-                  controller: _password,
-                ),
-            
-                SizedBox(
-                  height: screenHeight * 0.10,
-                ),
-                //Login button------------
+                //Signup button------------
                 Center(
                   child: CustomButton(
-                    onTap:(){
-                      if(_formKey.currentState!.validate()){
+                    onTap: ()async {
+                      if (_formKey.currentState!.validate()) {
                         print(" Validated--------------------");
-                        _signIn(context);
-                      }else{
+                        await storedetailse();
+                        Get.off(ScreenHome());
+                      } else {
                         print("Not Validated--------------------");
                       }
                     },
                     screenWidth: screenWidth,
-                    text: textLoginButton,
+                    text: "Save",
                   ),
                 ),
-                SizedBox(height: 08,),
-                //Rich text --------------------------------
-                Center(
-                  child: RichTextWidget(
-                    text: "Don’t have an account?",
-                    eventText: "Sign up",
-                    onTap: (){
-                      Get.off(ScreenSignUp(),transition: Transition.cupertino);
-                    },
-                  ),
-                )
+               
+              
+                
               ],
             ),
           ),
@@ -155,11 +170,6 @@ class _ScreenLoginState extends State<ScreenLogin> {
       ),
     );
   }
-  Future<void>_signIn(BuildContext context)async{
-    final user = await _auth.signInUserWithEmailAndPassword(_email.text, _password.text,context);
-    if(user!=null){
-      log("successfully longed");
-       Get.off(()=>ScreenHome(),transition: Transition.cupertino);
-    }
-  }
+
+
 }
