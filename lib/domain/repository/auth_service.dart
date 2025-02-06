@@ -4,10 +4,25 @@ import 'package:echo_booking/feature/presentation/widgets/showDiolog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final _auth = FirebaseAuth.instance;
   String? uidOfUser;
+
+  Future<UserCredential?>signInWithGoogle()async{
+   try{
+     final googleUser = await GoogleSignIn().signIn();
+    final googleAuth = await googleUser?.authentication;
+    final cred = GoogleAuthProvider.credential(idToken: googleAuth?.idToken,accessToken: googleAuth?.accessToken);
+    log("succsess=============");
+    return await _auth.signInWithCredential(cred);
+   }
+   catch (e){
+    log(e.toString());
+   }
+   return null;
+  }
 
   //cheking login status
   bool checkLoginStatus(){

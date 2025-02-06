@@ -4,6 +4,7 @@ import 'package:echo_booking/core/constent/size/size.dart';
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/domain/repository/auth_service.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/home_tab.dart';
+import 'package:echo_booking/feature/presentation/pages/screen_account/screen_account.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_welcome/screen_welcome.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +67,9 @@ class _ScreenHomeState extends State<ScreenHome> {
                             Align(
                               alignment: Alignment.topRight,
                               child: IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Get.to(()=>ScreenAccount(),transition: Transition.cupertino,duration: Duration(milliseconds: 600));
+                                },
                                 icon: Icon(
                                   Icons.account_circle,
                                   color: iconColorPerson,

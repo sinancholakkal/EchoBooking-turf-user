@@ -63,8 +63,24 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
       },
     );
 
+    on<SignInWithGoogle>(
+      (event, emit) async {
+        emit(AuthLoadingState());
+        await Future.delayed(Duration(seconds: 2));
+        try {
+          final user = await _authService.signInWithGoogle();
+          log(user!.user!.uid);
+          
+          emit(AuthSuccessState(user: user));
+        } on FirebaseAuthException catch (e) {
+          log("Somthing wrong while SignIn ${e.code}");
+          emit(AuthErrorState(errorMessage: e.code));
+        }
+      },
+    );
+
     on<SignOutEvent>(
-      (event, emit) async{
+      (event, emit) async {
         emit(AuthLoadingState());
         await Future.delayed(Duration(milliseconds: 1000));
         try {
@@ -76,6 +92,5 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         }
       },
     );
-    
   }
 }

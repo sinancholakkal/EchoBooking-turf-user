@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:echo_booking/core/constent/image/image_constand.dart';
+import 'package:echo_booking/core/constent/size/size.dart';
 import 'package:echo_booking/core/constent/text/text_constend.dart';
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/core/until/validation.dart';
@@ -79,6 +81,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
                   SizedBox(
                     height: 60,
                   ),
+                  //app title-----------
                   Align(
                     alignment: Alignment.topLeft,
                     child: HeadingText(
@@ -182,6 +185,25 @@ class _ScreenLoginState extends State<ScreenLogin> {
                       },
                     ),
                   ),
+                  height10,
+                   //social madia login-------
+          Center(
+              child: Text(
+            "Or  via social media",
+            style: TextStyle(color: kWhite),
+          )),
+          height10,
+          Center(
+            child: InkWell(
+              onTap: ()async{
+               context.read<AuthBlocBloc>().add(SignInWithGoogle());
+               //await _auth.signInWithGoogle();
+               Get.off(ScreenHome());
+
+              },
+              child: Image.asset(loginGoogleIcon,width: 40,height: 40,),
+            ),
+          ),
                   
                 ],
               ),

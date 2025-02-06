@@ -5,6 +5,8 @@ sealed class AuthBlocEvent {}
 
 class CheckLoginStatusEvent extends AuthBlocEvent{}
 
+class SignInWithGoogle extends AuthBlocEvent{}
+
 class SignUpEvent extends AuthBlocEvent{
   final String email;
   final String password;
