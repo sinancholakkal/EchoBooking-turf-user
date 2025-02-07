@@ -24,3 +24,8 @@ class SignInEvent extends AuthBlocEvent{
 class SignOutEvent extends AuthBlocEvent{
   
 }
+
+class ForgotpasswordEvent extends AuthBlocEvent{
+  String email;
+  ForgotpasswordEvent({required this.email});
+}

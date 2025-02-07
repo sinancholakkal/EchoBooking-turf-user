@@ -1,6 +1,5 @@
 import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:echo_booking/core/constent/image/image_constand.dart';
 import 'package:echo_booking/core/constent/text/text_constend.dart';
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/core/until/validation.dart';
@@ -8,14 +7,11 @@ import 'package:echo_booking/domain/model/user_model.dart';
 import 'package:echo_booking/domain/repository/auth_service.dart';
 import 'package:echo_booking/feature/presentation/bloc/user/user_bloc.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/home_screen.dart';
-import 'package:echo_booking/feature/presentation/pages/screen_login/screen_login.dart';
 import 'package:echo_booking/feature/presentation/widgets/custom_button.dart';
 import 'package:echo_booking/feature/presentation/widgets/heading_text.dart';
 import 'package:echo_booking/feature/presentation/widgets/loading_widget.dart';
-import 'package:echo_booking/feature/presentation/widgets/rich_text_widget.dart';
 import 'package:echo_booking/feature/presentation/widgets/text_form_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -34,6 +30,7 @@ class _ScreenSignUpState extends State<ScreenUserDetails> {
   late TextEditingController _address;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _auth = AuthService();
+  int avatarSelected = 0;
 
   @override
   void initState() {
@@ -41,6 +38,13 @@ class _ScreenSignUpState extends State<ScreenUserDetails> {
     _phone = TextEditingController();
     _address = TextEditingController();
     super.initState();
+  }
+  @override
+  void dispose() {
+    _fullName.dispose();
+    _phone.dispose();
+    _address.dispose();
+    super.dispose();
   }
 
   @override
@@ -81,12 +85,44 @@ class _ScreenSignUpState extends State<ScreenUserDetails> {
                   SizedBox(
                     height: screenHeight * 0.06,
                   ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: HeadingText(
-                      text: "Personal Details",
+                  // Align(
+                  //   alignment: Alignment.topLeft,
+                  //   child: HeadingText(
+                  //     text: "Personal Details",
+                  //   ),
+                  // ),
+                  Container(
+              width: double.infinity,
+              height: 100,
+              
+              child: RotatedBox(
+                quarterTurns: -1,
+                child: ListWheelScrollView(
+                  physics: FixedExtentScrollPhysics(),
+                  perspective: 0.009,
+                  onSelectedItemChanged: (val) {
+                    avatarSelected = val;
+                  },
+                  itemExtent: 100,
+                  children: [
+                    RotatedBox(
+                      quarterTurns: 1,
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundImage: AssetImage(avatar[0]),
+                      ),
                     ),
-                  ),
+                    RotatedBox(
+                      quarterTurns: 1,
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundImage: AssetImage(avatar[1]),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
 
                   //Full name----------------
                   SizedBox(
@@ -161,6 +197,7 @@ class _ScreenSignUpState extends State<ScreenUserDetails> {
                         if (_formKey.currentState!.validate()) {
                           print(" Validated--------------------");
                           final user = UserModel(
+                            gender: (avatarSelected ==0)?"boy":"girl",
                             name: _fullName.text,
                             phone: _phone.text,
                             address: _address.text,
@@ -186,6 +223,4 @@ class _ScreenSignUpState extends State<ScreenUserDetails> {
       ),
     );
   }
-
- 
 }

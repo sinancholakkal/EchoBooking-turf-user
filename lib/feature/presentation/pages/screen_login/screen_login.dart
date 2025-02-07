@@ -9,12 +9,14 @@ import 'package:echo_booking/domain/repository/auth_service.dart';
 import 'package:echo_booking/feature/presentation/bloc/auth_bloc/auth_bloc_bloc.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/home_screen.dart';
 import 'package:echo_booking/feature/presentation/pages/sign_up/screen_sign_up.dart';
+import 'package:echo_booking/feature/presentation/screen_forgot/screen_forgot.dart';
 import 'package:echo_booking/feature/presentation/widgets/custom_button.dart';
 import 'package:echo_booking/feature/presentation/widgets/heading_text.dart';
 import 'package:echo_booking/feature/presentation/widgets/loading_widget.dart';
 import 'package:echo_booking/feature/presentation/widgets/rich_text_widget.dart';
 import 'package:echo_booking/feature/presentation/widgets/showDiolog.dart';
 import 'package:echo_booking/feature/presentation/widgets/text_form_widget.dart';
+import 'package:echo_booking/feature/presentation/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as bloc;
 import 'package:get/get.dart';
@@ -52,12 +54,14 @@ class _ScreenLoginState extends State<ScreenLogin> {
     double screenHeight = MediaQuery.of(context).size.height;
     return bloc.BlocListener<AuthBlocBloc, AuthBlocState>(
       listener: (context, state) {
-        if(state is AuthLoadingState){
+        if (state is AuthLoadingState) {
           loadingWidget(context);
-        }
-       else if (state is AuthSuccessState) {
-          Get.off(() => ScreenHome(), transition: Transition.cupertino,duration: Duration(milliseconds: 1300));
+        } else if (state is AuthSuccessState) {
+          Get.off(() => ScreenHome(),
+              transition: Transition.cupertino,
+              duration: Duration(milliseconds: 1300));
         } else if (state is AuthErrorState) {
+          Navigator.pop(context);
           if (state.errorMessage == "invalid-credential") {
             showDiolog(
               context: context,
@@ -67,6 +71,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
             );
           }
         }
+        //Navigator.pop(context);
       },
       child: Scaffold(
         backgroundColor: backGroundColor,
@@ -148,9 +153,29 @@ class _ScreenLoginState extends State<ScreenLogin> {
                     },
                     controller: _password,
                   ),
+                  SizedBox(height: 5,),
+                  //forgot button----------
+                  GestureDetector(
+                    onTap: (){
+                      Get.to(ScreenForgot(),transition: Transition.cupertino,duration: Duration(microseconds: 800));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 6),
+                      child: Align(
+                        
+                        alignment: Alignment.topRight,
+                        child: TextWidget(
+                          text: "Forgot Password",
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                          size: 14,
+                        ),
+                      ),
+                    ),
+                  ),
 
                   SizedBox(
-                    height: screenHeight * 0.10,
+                    height: screenHeight * 0.06,
                   ),
                   //Login button------------
                   Center(
@@ -186,25 +211,27 @@ class _ScreenLoginState extends State<ScreenLogin> {
                     ),
                   ),
                   height10,
-                   //social madia login-------
-          Center(
-              child: Text(
-            "Or  via social media",
-            style: TextStyle(color: kWhite),
-          )),
-          height10,
-          Center(
-            child: InkWell(
-              onTap: ()async{
-               context.read<AuthBlocBloc>().add(SignInWithGoogle());
-               //await _auth.signInWithGoogle();
-               Get.off(ScreenHome());
-
-              },
-              child: Image.asset(loginGoogleIcon,width: 40,height: 40,),
-            ),
-          ),
-                  
+                  //social madia login-------
+                  Center(
+                      child: Text(
+                    "Or  via social media",
+                    style: TextStyle(color: kWhite),
+                  )),
+                  height10,
+                  Center(
+                    child: InkWell(
+                      onTap: () async {
+                        context.read<AuthBlocBloc>().add(SignInWithGoogle());
+                        //await _auth.signInWithGoogle();
+                        Get.off(ScreenHome());
+                      },
+                      child: Image.asset(
+                        loginGoogleIcon,
+                        width: 40,
+                        height: 40,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

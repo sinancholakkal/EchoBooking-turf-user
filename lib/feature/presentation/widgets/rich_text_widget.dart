@@ -17,7 +17,7 @@ class RichTextWidget extends StatelessWidget {
     return RichText(
         text: TextSpan(text: text, children: [
       TextSpan(
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blue),
           text: eventText,
           recognizer: TapGestureRecognizer()..onTap = onTap)
     ]));

@@ -13,3 +13,7 @@ const Widget height10 = SizedBox(height: 10,);
 
 // Home card
 const double cardRadius = 16;
+
+//Profile
+const double profilecardHeight = 110;
+const double profilecardRadius = 20;

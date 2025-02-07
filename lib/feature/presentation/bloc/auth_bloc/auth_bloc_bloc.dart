@@ -92,5 +92,13 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         }
       },
     );
+
+    on<ForgotpasswordEvent>((event, emit) {
+      try{
+        AuthService().forgotPassword(event.email);
+      }on FirebaseAuthException catch(e){
+        log("forgot issue ${e.code}");
+      }
+    },);
   }
 }

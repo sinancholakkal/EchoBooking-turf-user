@@ -15,4 +15,6 @@ final starIconColor = Colors.red[400];
 const buttonColor =  Color.fromARGB(255, 41, 38, 236);
 
 //card bg color
-const cardBgColor = Color.fromARGB(255, 187, 223, 199);
+const cardBgColor = Color.fromARGB(255, 245, 242, 199);
+//Color.fromARGB(255, 187, 223, 199);
+const iconColor = Color.fromARGB(255, 245, 242, 199);

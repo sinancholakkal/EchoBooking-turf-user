@@ -70,6 +70,8 @@ flutter:
     - asset/icons/icons8-google-48.png
     - asset/icons/football.png
     - asset/loading.gif
+    - asset/girl-avatar.jpg
+    - asset/boy-avatar.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
