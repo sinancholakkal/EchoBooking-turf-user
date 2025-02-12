@@ -11,6 +11,7 @@ const conformPassword = "Conform password";
 
 //Home tab 
 const popularText = "Popular";
+const footballText = "Football";
 const listOfTurf = "List of Turf";
 
 //personalDetails

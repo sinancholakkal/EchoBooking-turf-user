@@ -35,7 +35,7 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
       height: profilecardHeight,
       width: widget.screenWidth * .85,
       decoration: BoxDecoration(
-          color: cardBgColor,
+          gradient: linearGradient,
           borderRadius: BorderRadius.circular(profilecardRadius)),
       child: BlocBuilder<UserBloc, UserState>(
         builder: (context, state) {
@@ -72,7 +72,7 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                 children: [
                   TextWidget(
                     text: data.name,
-                    color: kBlack,
+                    color: kWhite,
                     size: 18,
                     fontWeight: FontWeight.bold,
                   ),
