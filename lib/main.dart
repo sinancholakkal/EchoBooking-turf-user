@@ -1,4 +1,5 @@
 import 'package:echo_booking/feature/presentation/bloc/auth_bloc/auth_bloc_bloc.dart';
+import 'package:echo_booking/feature/presentation/bloc/bloc/turf_bloc.dart';
 import 'package:echo_booking/feature/presentation/bloc/item_view/item_view_bloc.dart';
 import 'package:echo_booking/feature/presentation/bloc/user/user_bloc.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_splash/screen_splash.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
          BlocProvider(
           create: (context) => ItemViewBloc(),
         ),
+        BlocProvider(create: (context)=>TurfBloc())
       ],
       child: GetMaterialApp(
         home: ScreenSplash(),

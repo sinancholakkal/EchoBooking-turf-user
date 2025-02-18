@@ -30,7 +30,8 @@ class _ScreenHomeState extends State<ScreenHome> {
 
   @override
   void initState() {
-    context.read<UserBloc>().add(UserDataFetchingEvent());
+    // context.read<TurfBloc>().add(TurfFetchEvent());
+    // context.read<UserBloc>().add(UserDataFetchingEvent());
     super.initState();
   }
 
