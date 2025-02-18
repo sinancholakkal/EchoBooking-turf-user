@@ -14,9 +14,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UserStoreEvent>((event, emit) async{
       try{
         emit(UserLoadingState());
-        await Future.delayed(Duration(milliseconds: 1500),);
+        await Future.delayed(Duration(seconds: 2),);
         await userService.userStore(event.user);
-        emit(UserLoadedState());
+        emit(UserAddedState());
       }catch(e){
         log("somthing wrong during store User $e");
       }
@@ -24,7 +24,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UserDataFetchingEvent>((event, emit) async{
       try{
         emit(UserLoadingState());
-        //await Future.delayed(Duration(seconds: 1),);
+        await Future.delayed(Duration(seconds: 1),);
         UserModel? user =await userService.userDataFetching();
         log("event called in bloc");
         

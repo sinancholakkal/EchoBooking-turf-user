@@ -57,7 +57,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
         if (state is AuthLoadingState) {
           loadingWidget(context);
         } else if (state is AuthSuccessState) {
-          Get.off(() => ScreenHome(),
+          Get.offAll(() => ScreenHome(),
               transition: Transition.cupertino,
               duration: Duration(milliseconds: 1300));
         } else if (state is AuthErrorState) {

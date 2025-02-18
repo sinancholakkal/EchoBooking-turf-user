@@ -7,8 +7,8 @@ class TextFormFieldWidget extends StatelessWidget {
   final int maxLine;
   TextFormFieldWidget({
     super.key,
-    this.controller,
-    this.validator,
+    required this.controller,
+    required this.validator,
     this.maxLine =1
   });
 

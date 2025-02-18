@@ -13,7 +13,7 @@ import 'package:echo_booking/feature/presentation/widgets/loading_widget.dart';
 import 'package:echo_booking/feature/presentation/widgets/text_form_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' as bloc;
 import 'package:get/get.dart';
 
 class ScreenUserDetails extends StatefulWidget {
@@ -39,6 +39,7 @@ class _ScreenSignUpState extends State<ScreenUserDetails> {
     _address = TextEditingController();
     super.initState();
   }
+
   @override
   void dispose() {
     _fullName.dispose();
@@ -52,15 +53,22 @@ class _ScreenSignUpState extends State<ScreenUserDetails> {
     log(widget.user.uid);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    return BlocListener<UserBloc, UserState>(
-      listener: (context, state) {
+    return bloc.BlocListener<UserBloc, UserState>(
+      listener: (context, state) async {
         if (state is UserLoadingState) {
-          loadingWidget(context);
-        } else if (state is UserLoadedState) {
-          if (Navigator.of(context).canPop()) {
-            Navigator.of(context, rootNavigator: true).pop();
-          }
-          Get.off(() => ScreenHome());
+          //loadingWidget(context);
+        } else if (state is UserAddedState) {
+          //Navigator.of(context).pop();
+          // if (Navigator.of(context).canPop()) {
+          //   Navigator.of(context).pop(); // Close the loading dialog
+          // }
+          // Navigator.pop(context);
+          await Future.delayed(Duration(milliseconds: 200));
+          log("poped==============");
+          // Get.offAll(() => ScreenHome());
+          Get.offAll(() => ScreenHome(),
+              transition: Transition.cupertino,
+              duration: Duration(milliseconds: 1300));
         }
       },
       child: Scaffold(
@@ -92,37 +100,36 @@ class _ScreenSignUpState extends State<ScreenUserDetails> {
                   //   ),
                   // ),
                   Container(
-              width: double.infinity,
-              height: 100,
-              
-              child: RotatedBox(
-                quarterTurns: -1,
-                child: ListWheelScrollView(
-                  physics: FixedExtentScrollPhysics(),
-                  perspective: 0.009,
-                  onSelectedItemChanged: (val) {
-                    avatarSelected = val;
-                  },
-                  itemExtent: 100,
-                  children: [
-                    RotatedBox(
-                      quarterTurns: 1,
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundImage: AssetImage(avatar[0]),
+                    width: double.infinity,
+                    height: 100,
+                    child: RotatedBox(
+                      quarterTurns: -1,
+                      child: ListWheelScrollView(
+                        physics: FixedExtentScrollPhysics(),
+                        perspective: 0.009,
+                        onSelectedItemChanged: (val) {
+                          avatarSelected = val;
+                        },
+                        itemExtent: 100,
+                        children: [
+                          RotatedBox(
+                            quarterTurns: 1,
+                            child: CircleAvatar(
+                              radius: 50,
+                              backgroundImage: AssetImage(avatar[0]),
+                            ),
+                          ),
+                          RotatedBox(
+                            quarterTurns: 1,
+                            child: CircleAvatar(
+                              radius: 50,
+                              backgroundImage: AssetImage(avatar[1]),
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                    RotatedBox(
-                      quarterTurns: 1,
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundImage: AssetImage(avatar[1]),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
+                  ),
 
                   //Full name----------------
                   SizedBox(
@@ -197,7 +204,7 @@ class _ScreenSignUpState extends State<ScreenUserDetails> {
                         if (_formKey.currentState!.validate()) {
                           print(" Validated--------------------");
                           final user = UserModel(
-                            gender: (avatarSelected ==0)?"boy":"girl",
+                            gender: (avatarSelected == 0) ? "boy" : "girl",
                             name: _fullName.text,
                             phone: _phone.text,
                             address: _address.text,

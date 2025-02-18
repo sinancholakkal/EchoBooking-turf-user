@@ -6,6 +6,8 @@ sealed class UserState {}
  class UserInitial extends UserState {}
 
 class UserLoadingState extends UserState{}
+class UserAddedState extends UserState{
+}
 
 class UserLoadedState extends UserState{
   UserModel? user;

@@ -45,6 +45,7 @@ class _ScreenHomeState extends State<ScreenHome> {
             backgroundColor: backGroundColor,
           );
         }else if(state is UserLoadedState){
+          
           log(state.user!.gender);
           log("============");
           String image = (state.user!.gender=="boy")?avatar[0]:avatar[1];

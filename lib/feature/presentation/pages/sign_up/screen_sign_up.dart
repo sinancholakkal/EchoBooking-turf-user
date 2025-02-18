@@ -58,6 +58,7 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
               transition: Transition.cupertino,duration: Duration(milliseconds: 1300));
         } else if (state is AuthErrorState) {
           if (state.errorMessage == "email-already-in-use") {
+            Navigator.pop(context);
             showDiolog(
               context: context,
               title: "Email Already in Use",

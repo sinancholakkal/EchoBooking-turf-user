@@ -5,6 +5,7 @@ final backGroundColor = Color.fromARGB(255, 0, 5, 21);
 final kWhite = Colors.white;
 const kBlack = Colors.black;
 const kGrey = Colors.grey;
+const kblue = Color.fromARGB(255, 27, 70, 199);
 const iconColorPerson = Color.fromARGB(255, 131, 183, 111);
 
 //home sceen--
@@ -19,7 +20,6 @@ const buttonColor = Color.fromARGB(255, 41, 38, 236);
 const cardBgColor = Color.fromARGB(255, 39, 10, 49);
 //Color.fromARGB(255, 187, 223, 199);
 const iconColor = Color.fromARGB(255, 245, 242, 199);
-
 // var linearGradient = LinearGradient(
 //     begin: Alignment.topLeft,
 //     end: Alignment.bottomRight,
