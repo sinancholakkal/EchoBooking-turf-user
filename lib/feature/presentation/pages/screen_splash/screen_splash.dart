@@ -1,6 +1,6 @@
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/feature/presentation/bloc/auth_bloc/auth_bloc_bloc.dart';
-import 'package:echo_booking/feature/presentation/bloc/bloc/turf_bloc.dart';
+import 'package:echo_booking/feature/presentation/bloc/turf_bloc/turf_bloc.dart';
 import 'package:echo_booking/feature/presentation/bloc/user/user_bloc.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/home_screen.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_welcome/screen_welcome.dart';
@@ -23,7 +23,7 @@ class _ScreenSplashState extends State<ScreenSplash> {
     super.initState();
     context.read<AuthBlocBloc>().add(CheckLoginStatusEvent());
     context.read<TurfBloc>().add(TurfFetchEvent());
-    context.read<UserBloc>().add(UserDataFetchingEvent());
+    //context.read<UserBloc>().add(UserDataFetchingEvent());
   }
 
   @override

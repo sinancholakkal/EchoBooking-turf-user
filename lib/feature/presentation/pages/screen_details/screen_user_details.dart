@@ -63,7 +63,7 @@ class _ScreenSignUpState extends State<ScreenUserDetails> {
           //   Navigator.of(context).pop(); // Close the loading dialog
           // }
           // Navigator.pop(context);
-          await Future.delayed(Duration(milliseconds: 200));
+          //await Future.delayed(Duration(milliseconds: 200));
           log("poped==============");
           // Get.offAll(() => ScreenHome());
           Get.offAll(() => ScreenHome(),

@@ -6,6 +6,7 @@ import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/domain/repository/auth_service.dart';
 import 'package:echo_booking/domain/repository/user_service.dart';
 import 'package:echo_booking/feature/presentation/bloc/user/user_bloc.dart';
+import 'package:echo_booking/feature/presentation/pages/home_screen/tabs/star_tab.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/home_tab.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_account/screen_account.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_welcome/screen_welcome.dart';
@@ -31,7 +32,7 @@ class _ScreenHomeState extends State<ScreenHome> {
   @override
   void initState() {
     // context.read<TurfBloc>().add(TurfFetchEvent());
-    // context.read<UserBloc>().add(UserDataFetchingEvent());
+     context.read<UserBloc>().add(UserDataFetchingEvent());
     super.initState();
   }
 
@@ -180,10 +181,7 @@ class _ScreenHomeState extends State<ScreenHome> {
                     "22222222222222222",
                     style: TextStyle(color: Colors.white),
                   ),
-                  Text(
-                    "333333333333333333",
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  StarTab(),
                 ],
               ),
             ),

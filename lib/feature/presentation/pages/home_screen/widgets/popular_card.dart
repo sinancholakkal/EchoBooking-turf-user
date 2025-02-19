@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:echo_booking/core/constent/size/size.dart';
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/domain/model/turf_model.dart';
+import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/card_turf_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_item_view/screen_item_view.dart';
 import 'package:echo_booking/feature/presentation/widgets/custom_button.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,7 +42,7 @@ class PopularCard extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: (){
-                          Get.to(()=>ScreenItemView(tag: tag,turfmodel: turfModel,),transition: Transition.circularReveal,duration: Duration(milliseconds: 800),);
+                          Get.to(()=>ScreenItemView(tag: tag,turfmodel: turfModel,type: ActionTypeFrom.noStar,),transition: Transition.circularReveal,duration: Duration(milliseconds: 800),);
                         },
             child: SizedBox(
               height: 170,

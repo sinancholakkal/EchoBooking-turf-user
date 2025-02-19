@@ -4,8 +4,9 @@ import 'package:echo_booking/core/constent/size/size.dart';
 import 'package:echo_booking/core/constent/text/text_constend.dart';
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/domain/model/turf_model.dart';
-import 'package:echo_booking/feature/presentation/bloc/bloc/turf_bloc.dart';
+import 'package:echo_booking/feature/presentation/bloc/turf_bloc/turf_bloc.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/card_heading.dart';
+import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/card_turf_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_account/widget/profile_card_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_item_view/screen_item_view.dart';
 import 'package:echo_booking/feature/presentation/widgets/custom_button.dart';
@@ -140,75 +141,7 @@ class _HomeTabState extends State<HomeTab> {
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: state.turfModels[1].length,
                 itemBuilder: (context, index) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                    child: GestureDetector(
-                      onTap: () {
-                        Get.to(
-                            () => ScreenItemView(
-                              turfmodel: state.turfModels[1][index],
-                                  tag: "list_item_view$index",
-                                ),
-                            transition: Transition.circularReveal,
-                            duration: Duration(milliseconds: 800));
-                      },
-                      child: Container(
-                        height: profilecardHeight,
-                        width: screenWidth * .85,
-                        decoration: BoxDecoration(
-                            gradient: linearGradient,
-                            borderRadius:
-                                BorderRadius.circular(profilecardRadius)),
-                        child: Row(
-                          children: [
-                            Hero(
-                              tag: "list_item_view$index",
-                              child: Container(
-                                margin: EdgeInsets.symmetric(horizontal: 14),
-                                width: screenWidth * .23,
-                                height: screenWidth * .23,
-                                decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.circular(profilecardRadius),
-                                  //color: Colors.grey,
-                                ),
-                                child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.circular(profilecardRadius),
-                                  child: Image.network(
-                                    fit: BoxFit.cover,
-                                    state.turfModels[1][index].images[0],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              spacing: 3,
-                              children: [
-                                TextWidget(
-                                  text: state.turfModels[1][index].turfName,
-                                  color: kWhite,
-                                  size: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                SizedBox(
-                                  width: screenWidth * 0.5,
-                                  child: TextWidget(
-                                    text: state.turfModels[1][index].landmark,
-                                    color: Colors.grey,
-                                    size: 14,
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
+                  return CardTurfsWidget(screenWidth: screenWidth, turfModel: state.turfModels[1][index], index: index, heroTag: "listView_$index", type: ActionTypeFrom.noStar);
                 },
               )
             ],
@@ -237,6 +170,7 @@ class FootballItemCardWidget extends StatelessWidget {
         onTap: () {
           Get.to(
               () => ScreenItemView(
+                type: ActionTypeFrom.noStar,
                 turfmodel: turfModel,
                     tag: "category_item_view$index",
                   ),

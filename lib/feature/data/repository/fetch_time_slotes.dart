@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:echo_booking/domain/model/turf_model.dart';
+import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/card_turf_widget.dart';
 
-Future<Map<String, List<Map<String, dynamic>>>> fetchingTimeSlots({required TurfModel turfmodel}) async {
+Future<Map<String, List<Map<String, dynamic>>>> fetchingTimeSlots({required TurfModel turfmodel,required ActionTypeFrom type}) async {
+  
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
         .instance
-        .collection("owner")
+        .collection(ActionTypeFrom.noStar==type?"owner":"userApp")
         .doc(turfmodel.ownerId)
-        .collection("turfs")
+        .collection(ActionTypeFrom.noStar==type?"turfs":"star")
         .doc(turfmodel.turfId)
         .collection("timeSlotes")
         .get();
