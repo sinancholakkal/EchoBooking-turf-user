@@ -10,7 +10,7 @@ class TurfModel {
   final String catogery;
   final String includes;
   final String landmark;
-  final bool reviewStatus;
+  final String reviewStatus;
   List<dynamic>images;
   final String ownerId;
   final String turfId;

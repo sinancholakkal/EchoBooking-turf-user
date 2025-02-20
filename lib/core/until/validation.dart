@@ -1,7 +1,7 @@
 class Validation {
   static String? emailValidation(String? value) {
     if (value == null || value.isEmpty) {
-      return "Password cannot be empty";
+      return "Email cannot be empty";
     } else if (!value.endsWith("@gmail.com")) {
       return "Invalid email address";
     } else {

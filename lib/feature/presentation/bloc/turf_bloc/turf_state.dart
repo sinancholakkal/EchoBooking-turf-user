@@ -11,3 +11,4 @@ class TurfFetchLoadedState extends TurfState{
   List<List<TurfModel>> turfModels;
   TurfFetchLoadedState({required this.turfModels});
 }
+class TurfEmptyState extends TurfState{}

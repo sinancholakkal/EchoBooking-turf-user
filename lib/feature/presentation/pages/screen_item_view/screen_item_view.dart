@@ -117,7 +117,17 @@ class _ScreenItemViewState extends State<ScreenItemView> {
                         Map<String, List<Map<String, dynamic>>> timeSlots =
                             snapshot.data ?? {};
                         List<String> dateKeys = timeSlots.keys.toList();
-                        return SizedBox(
+                        if(timeSlots.isEmpty){
+                          return Center(
+                            child: Column(
+                              children: [
+                                SizedBox(height: 200,),
+                                TextWidget(text: "No data!",color: Colors.white,)
+                              ],
+                            ),
+                          );
+                        }else{
+                          return SizedBox(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -303,6 +313,7 @@ class _ScreenItemViewState extends State<ScreenItemView> {
                             ],
                           ),
                         );
+                        }
                       } else {
                         return SizedBox();
                       }

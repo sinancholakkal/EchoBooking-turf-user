@@ -23,8 +23,8 @@ class TurfService {
       if (turfDocs.docs.isNotEmpty) {
         for (var turf in turfDocs.docs) {
           final turfData = turf.data();
-          if (turfData["reviewStatus"] == false ||
-              turfData["reviewStatus"] == true) {
+          if (
+              turfData["reviewStatus"] == "true") {
             log(turfData.toString());
 
             final turfModel = TurfModel(

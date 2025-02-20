@@ -16,7 +16,12 @@ class TurfBloc extends Bloc<TurfEvent, TurfState> {
       emit(TurfFetchLoadingState());
       try{
         List<List<TurfModel>> turfModels = await turfService.fetchAllTurfs();
-        emit(TurfFetchLoadedState(turfModels: turfModels));
+        if(turfModels[0].isEmpty){
+          emit(TurfEmptyState());
+        }else{
+          emit(TurfFetchLoadedState(turfModels: turfModels));
+        }
+        
       }catch(e){
         log("somthing wrong while fetching all turfs $e ===================");
       }
