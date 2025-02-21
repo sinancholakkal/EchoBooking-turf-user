@@ -1,24 +1,28 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:echo_booking/domain/model/turf_model.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/card_turf_widget.dart';
 
-Future<Map<String, List<Map<String, dynamic>>>> fetchingTimeSlots({required TurfModel turfmodel,required ActionTypeFrom type}) async {
-  
-    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
-        .instance
-        .collection(ActionTypeFrom.noStar==type?"owner":"userApp")
-        .doc(turfmodel.ownerId)
-        .collection(ActionTypeFrom.noStar==type?"turfs":"star")
-        .doc(turfmodel.turfId)
-        .collection("timeSlotes")
-        .get();
-    List<QueryDocumentSnapshot<Map<String, dynamic>>> timeSlotes =
-        snapshot.docs;
-    Map<String, List<Map<String, dynamic>>> timeSlotsMap = {};
-    for (var timeSlot in timeSlotes) {
-      String dateKey = timeSlot.id;
-      Map<String, dynamic> timeData = timeSlot.data();
+Future<Map<String, List<Map<String, dynamic>>>> fetchingTimeSlots(
+    {required TurfModel turfmodel, required ActionTypeFrom type}) async {
+  final snapshotRef = FirebaseFirestore.instance
+      .collection(ActionTypeFrom.noStar == type ? "owner" : "userApp")
+      .doc(turfmodel.ownerId)
+      .collection(ActionTypeFrom.noStar == type ? "turfs" : "star")
+      .doc(turfmodel.turfId)
+      .collection("timeSlotes");
+  QuerySnapshot<Map<String, dynamic>> snapshot = await snapshotRef.get();
 
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> timeSlotes = snapshot.docs;
+  Map<String, List<Map<String, dynamic>>> timeSlotsMap = {};
+  for (var timeSlot in timeSlotes) {
+    String dateKey = timeSlot.id;
+
+    Map<String, dynamic> timeData = timeSlot.data();
+    int date = int.parse(dateKey.split("-")[2]);
+    int currentDate = DateTime.now().day;
+    if (date >= currentDate) {
       if (!timeSlotsMap.containsKey(dateKey)) {
         timeSlotsMap[dateKey] = [];
       }
@@ -34,6 +38,11 @@ Future<Map<String, List<Map<String, dynamic>>>> fetchingTimeSlots({required Turf
       } else {
         timeSlotsMap[dateKey]?.add(timeData);
       }
+    }else{
+      await snapshotRef
+      .doc(dateKey).delete();
+      log("$date deleted----------");
     }
-    return timeSlotsMap;
   }
+  return timeSlotsMap;
+}

@@ -92,38 +92,6 @@ class TurfService {
       turfs.add(turfModel);
     }
 
-    // final turfDocs = await ownerSnap.doc(AuthService().getCurrentUser()!.uid).collection("star").get();
-
-    // if (turfDocs.docs.isNotEmpty) {
-    //   for (var turf in turfDocs.docs) {
-    //     final turfData = turf.data();
-
-    //       log(turfData.toString());
-    //       log("==============");
-
-    // final turfModel = TurfModel(
-    //   latitude: turfData['latitude'],
-    //   longitude: turfData['longitude'],
-    //     ownerId: ownerData['uid'],
-    //     turfId: turfData['turfid'],
-    //     ownerName: ownerData['name'],
-    //     ownerEmail: ownerData['email'] ??"Unknown",
-    //     turfName: turfData['turfname'],
-    //     phone: turfData['phone'],
-    //     email: turfData['email'] ??"Unknown",
-    //     price: turfData['price'],
-    //     state: turfData['state'],
-    //     country: turfData['country'],
-    //     catogery: turfData['catogery'],
-    //     includes: turfData['includes'],
-    //     landmark: turfData['landmark'],
-    //     reviewStatus: turfData['reviewStatus'],
-    //     images: turfData["images"]);
-    //   turfs.add(turfModel);
-
-    //   }
-    // }
-
     return turfs;
   }
 

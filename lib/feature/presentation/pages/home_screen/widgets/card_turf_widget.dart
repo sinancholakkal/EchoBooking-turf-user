@@ -1,18 +1,20 @@
 import 'package:echo_booking/core/constent/size/size.dart';
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/domain/model/turf_model.dart';
+import 'package:echo_booking/feature/presentation/bloc/star_bloc/star_bloc.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_item_view/screen_item_view.dart';
 import 'package:echo_booking/feature/presentation/widgets/text_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' as bloc;
 import 'package:get/get.dart';
 
 class CardTurfsWidget extends StatelessWidget {
   final ActionTypeFrom type;
- final TurfModel turfModel;
+  final TurfModel turfModel;
   int index;
   String heroTag;
-   CardTurfsWidget({
+  CardTurfsWidget({
     super.key,
     required this.screenWidth,
     required this.turfModel,
@@ -26,14 +28,13 @@ class CardTurfsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+      padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
       child: GestureDetector(
         onTap: () {
           Get.to(
               () => ScreenItemView(
-                type: type,
-                turfmodel: turfModel,
+                    type: type,
+                    turfmodel: turfModel,
                     tag: heroTag,
                   ),
               transition: Transition.circularReveal,
@@ -44,8 +45,7 @@ class CardTurfsWidget extends StatelessWidget {
           width: screenWidth * .85,
           decoration: BoxDecoration(
               gradient: linearGradient,
-              borderRadius:
-                  BorderRadius.circular(profilecardRadius)),
+              borderRadius: BorderRadius.circular(profilecardRadius)),
           child: Row(
             children: [
               Hero(
@@ -55,13 +55,11 @@ class CardTurfsWidget extends StatelessWidget {
                   width: screenWidth * .23,
                   height: screenWidth * .23,
                   decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.circular(profilecardRadius),
+                    borderRadius: BorderRadius.circular(profilecardRadius),
                     //color: Colors.grey,
                   ),
                   child: ClipRRect(
-                    borderRadius:
-                        BorderRadius.circular(profilecardRadius),
+                    borderRadius: BorderRadius.circular(profilecardRadius),
                     child: Image.network(
                       fit: BoxFit.cover,
                       turfModel.images[0],
@@ -69,27 +67,43 @@ class CardTurfsWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                spacing: 3,
-                children: [
-                  TextWidget(
-                    text: turfModel.turfName,
-                    color: kWhite,
-                    size: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  SizedBox(
-                    width: screenWidth * 0.5,
-                    child: TextWidget(
-                      text: turfModel.landmark,
-                      color: Colors.grey,
-                      size: 14,
+              SizedBox(
+                width: 210,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 3,
+                  children: [
+                    TextWidget(
+                      text: turfModel.turfName,
+                      color: kWhite,
+                      size: 18,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ),
-                ],
-              )
+                    SizedBox(
+                      width: screenWidth * 0.5,
+                      child: TextWidget(
+                        text: turfModel.landmark,
+                        color: Colors.grey,
+                        size: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              (ActionTypeFrom.star == type)
+                  ? PopupMenuButton(
+                      iconColor: kWhite,
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          onTap: ()=>context
+                  .read<StarBloc>()
+                  .add(RemoveTurfStarEvent(turfId: turfModel.turfId)),
+                          child: Text("Remove"),
+                        ),
+                      ],
+                    )
+                  : SizedBox()
             ],
           ),
         ),
@@ -97,7 +111,5 @@ class CardTurfsWidget extends StatelessWidget {
     );
   }
 }
-enum ActionTypeFrom{
-  star,
-  noStar
-}
+
+enum ActionTypeFrom { star, noStar }

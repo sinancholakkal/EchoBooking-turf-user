@@ -62,8 +62,6 @@ class _ScreenItemViewState extends State<ScreenItemView> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      //backgroundColor: backGroundColor,
-
       appBar: AppBar(
         backgroundColor: backGroundColor,
         iconTheme: IconThemeData(color: kWhite),
@@ -117,16 +115,7 @@ class _ScreenItemViewState extends State<ScreenItemView> {
                         Map<String, List<Map<String, dynamic>>> timeSlots =
                             snapshot.data ?? {};
                         List<String> dateKeys = timeSlots.keys.toList();
-                        if(timeSlots.isEmpty){
-                          return Center(
-                            child: Column(
-                              children: [
-                                SizedBox(height: 200,),
-                                TextWidget(text: "No data!",color: Colors.white,)
-                              ],
-                            ),
-                          );
-                        }else{
+                        
                           return SizedBox(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -195,9 +184,10 @@ class _ScreenItemViewState extends State<ScreenItemView> {
                 
                               height10,
                               //Booking date displaying-------------------------
-                              Column(
+                              timeSlots.isEmpty?Center(child: TextWidget(text: "No time slotes available now!"),): Column(
                                 children: [
                                   // Date Selector
+                                 
                                   DateDisplayBuilderWidget(
                                       selectedTimeIndex: selectedTimeSlotIndex,
                                       dateKeys: dateKeys,
@@ -214,7 +204,12 @@ class _ScreenItemViewState extends State<ScreenItemView> {
                                         child: ValueListenableBuilder(
                                           valueListenable: selectedTimeSlotIndex,
                                           builder: (context, selectTime, child) {
-                                            return Padding(
+                                            if(slots.isEmpty){
+                                              return Center(
+                                                child: TextWidget(text: "No time slotes available now!"),
+                                              );
+                                            }else{
+                                              return Padding(
                                               padding: EdgeInsets.only(left: 20),
                                               child: Wrap(
                                                   spacing: 10,
@@ -264,6 +259,7 @@ class _ScreenItemViewState extends State<ScreenItemView> {
                 
                                                   ),
                                             );
+                                            }
                                           },
                                         ),
                                       );
@@ -313,7 +309,7 @@ class _ScreenItemViewState extends State<ScreenItemView> {
                             ],
                           ),
                         );
-                        }
+                        
                       } else {
                         return SizedBox();
                       }
