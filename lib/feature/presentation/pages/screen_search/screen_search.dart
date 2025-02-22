@@ -24,6 +24,12 @@ class ScreenSearch extends StatefulWidget {
 class _ScreenSearchState extends State<ScreenSearch> {
   late TextEditingController _searchController;
   RangeValues _currentRangeValues = const RangeValues(100, 1000);
+  ValueNotifier<int?> selectedChipIndex = ValueNotifier<int?>(null);
+  List<String> choiceList = [
+    "Football",
+    "Cricket",
+    "Otheres",
+  ];
   @override
   void initState() {
     _searchController = TextEditingController();
@@ -101,13 +107,15 @@ class _ScreenSearchState extends State<ScreenSearch> {
                     if (state.searchTurfs.isNotEmpty) {
                       return IconButton(
                           onPressed: () {
+                            //Show  bottom sheet------
                             showBottomSheet(
                               elevation: 20,
-                              backgroundColor: const Color.fromARGB(255, 14, 11, 59),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 14, 11, 59),
                               context: context,
                               builder: (context) {
-                                RangeValues _tempRangeValues =
-                                    _currentRangeValues;
+                                // RangeValues _tempRangeValues =
+                                //     _currentRangeValues;
 
                                 return StatefulBuilder(
                                   builder: (context, setModalState) {
@@ -131,10 +139,26 @@ class _ScreenSearchState extends State<ScreenSearch> {
                                                       Icons.arrow_back,
                                                       color: kWhite,
                                                     )),
+                                                //Done button-----------
                                                 TextButton(
                                                     onPressed: () {
-                                                      context.read<SearchBloc>().add(
-                            SearchQueryEvent(searchQuery: {"search": _searchController.text}));
+                                                      _searchController.text = (selectedChipIndex.value!=null)?choiceList[selectedChipIndex.value!]:_searchController.text;
+                                                      context
+                                                          .read<SearchBloc>()
+                                                          .add(SearchQueryEvent(
+                                                              searchQuery: {
+                                                                "search":
+                                                                    _searchController
+                                                                        .text,
+                                                                "startprice":
+                                                                    _currentRangeValues
+                                                                        .start
+                                                                        .toString(),
+                                                                "endprice":
+                                                                    _currentRangeValues
+                                                                        .end
+                                                                        .toString()
+                                                              }));
                                                       Get.back();
                                                     },
                                                     child: Text(
@@ -150,19 +174,22 @@ class _ScreenSearchState extends State<ScreenSearch> {
                                                 const EdgeInsets.only(left: 10),
                                             child: TextWidget(text: "Price"),
                                           ),
-                                          BlocBuilder<SearchBloc,
-                                              SearchState>(
+                                          BlocBuilder<SearchBloc, SearchState>(
                                             builder: (context, state) {
+                                              _currentRangeValues = (state
+                                                      is RangeValueLoadedState)
+                                                  ? state.rangeValue
+                                                  : _currentRangeValues;
                                               return RangeSlider(
                                                 min: 0,
                                                 max: 2000,
                                                 divisions: 10,
-                                                values: state is RangeValueLoadedState?state.rangeValue:_currentRangeValues,
+                                                values: _currentRangeValues,
                                                 labels: RangeLabels(
-                                                  _tempRangeValues.start
+                                                  _currentRangeValues.start
                                                       .round()
                                                       .toString(),
-                                                  _tempRangeValues.end
+                                                  _currentRangeValues.end
                                                       .round()
                                                       .toString(),
                                                 ),
@@ -175,6 +202,59 @@ class _ScreenSearchState extends State<ScreenSearch> {
                                               );
                                             },
                                           ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 10, top: 10, bottom: 5),
+                                            child: TextWidget(text: "Category"),
+                                          ),
+                                          //category choice chip--------
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 10),
+                                            child: ValueListenableBuilder<int?>(
+                                              valueListenable:
+                                                  selectedChipIndex,
+                                              builder: (context, selectedIndex,
+                                                  child) {
+                                                return Wrap(
+                                                  spacing: 10,
+                                                  children:
+                                                      List.generate(3, (index) {
+                                                    return ChoiceChip(
+                                                      label: Text(
+                                                          choiceList[index]),
+                                                      selected: selectedIndex ==
+                                                          index,
+                                                      onSelected: (value) {
+                                                        selectedChipIndex
+                                                                .value =
+                                                            value
+                                                                ? index
+                                                                : null;
+                                                      },
+                                                      checkmarkColor:
+                                                          Colors.white,
+                                                      selectedColor:
+                                                          Colors.grey[850],
+                                                      backgroundColor:
+                                                          Colors.black,
+                                                      labelStyle: TextStyle(
+                                                          color: Colors.white),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        side: BorderSide(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    );
+                                                  }),
+                                                );
+                                              },
+                                            ),
+                                          )
                                         ],
                                       ),
                                     );
@@ -182,7 +262,7 @@ class _ScreenSearchState extends State<ScreenSearch> {
                                 );
                               },
                             );
-                            ;
+                            
                           },
                           icon: Icon(
                             Icons.filter_alt,

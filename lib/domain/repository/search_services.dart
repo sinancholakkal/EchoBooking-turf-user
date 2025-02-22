@@ -8,6 +8,8 @@ class SearchServices {
     final String? Searchcategory = querys['category']?.toLowerCase();
     final String? date = querys['date'];
     final String? time = querys['time'];
+    final String? startprice = querys['startprice'];
+    final String? endprice = querys['endprice'];
     final instance = FirebaseFirestore.instance;
     final ownerSnap = await instance.collection("owner").get();
     for (var ownerDoc in ownerSnap.docs) {
@@ -22,6 +24,14 @@ class SearchServices {
           if (searchQuery != null && turfname.contains(searchQuery) ||
               searchQuery == category) {
             isSearch = true;
+          }
+          if(isSearch == true && startprice!=null && endprice !=null){
+            double start = double.parse(startprice);
+            double end = double.parse(endprice);
+            int price = int.parse(turfData["price"]);
+            if(!(start<=price && price<=end)){
+              isSearch = false;
+            }
           }
           if (isSearch && turfData["reviewStatus"] == "true") {
             final turfModel = TurfModel(
