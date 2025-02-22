@@ -47,6 +47,9 @@ dependencies:
   chips_choice: ^3.0.1
   flutter_expandable_fab: ^2.3.0
   url_launcher: ^6.3.1
+  speech_to_text: ^7.0.0
+  toast: ^0.3.0
+  fluttertoast: ^8.2.12
 
 dev_dependencies:
   flutter_test:

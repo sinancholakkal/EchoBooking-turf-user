@@ -67,28 +67,30 @@ class CardTurfsWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                width: 210,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 3,
-                  children: [
-                    TextWidget(
-                      text: turfModel.turfName,
-                      color: kWhite,
-                      size: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    SizedBox(
-                      width: screenWidth * 0.5,
-                      child: TextWidget(
-                        text: turfModel.landmark,
-                        color: Colors.grey,
-                        size: 14,
+              Flexible(
+                child: SizedBox(
+                  width: screenWidth * 0.5,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 3,
+                    children: [
+                      TextWidget(
+                        text: turfModel.turfName,
+                        color: kWhite,
+                        size: 18,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        width: screenWidth * 0.5,
+                        child: TextWidget(
+                          text: turfModel.landmark,
+                          color: Colors.grey,
+                          size: 14,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               (ActionTypeFrom.star == type)

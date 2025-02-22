@@ -42,9 +42,6 @@ class _HomeTabState extends State<HomeTab> {
             );
           } else if (state is TurfFetchLoadedState) {
             final List<TurfModel> footballTurfs = state.turfModels[0];
-            // log(footballTurfs.toString());
-            //log(state.turfModels[2][0].turfId);
-            log("hhhhhhhhhhhhhhhhhhhhh");
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

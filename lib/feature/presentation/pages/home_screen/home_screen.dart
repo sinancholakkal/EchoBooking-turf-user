@@ -8,7 +8,9 @@ import 'package:echo_booking/domain/repository/user_service.dart';
 import 'package:echo_booking/feature/presentation/bloc/user/user_bloc.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/tabs/home_tab.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/tabs/star_tab.dart';
+import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/search_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_account/screen_account.dart';
+import 'package:echo_booking/feature/presentation/pages/screen_search/screen_search.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_welcome/screen_welcome.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -62,11 +64,6 @@ class _ScreenHomeState extends State<ScreenHome> {
                   SliverAppBar(
                     automaticallyImplyLeading: false,
                     elevation: 0,
-
-                    // backgroundColor: Colors.black,
-                    // expandedHeight: 150.0,
-                    // floating: false,
-                    // pinned: true,
                     toolbarHeight: kTabLabelPadding.horizontal,
                     expandedHeight: 205,
                     floating: false,
@@ -107,14 +104,7 @@ class _ScreenHomeState extends State<ScreenHome> {
                                   ),
                                 ),
                                 //search----------------
-                                SizedBox(
-                                  height: 50,
-                                  child: CupertinoSearchTextField(
-                                    itemColor: Colors.white60,
-                                    itemSize: 26,
-                                    backgroundColor: searchBgColor,
-                                  ),
-                                ),
+                                SearchWidget(onTapMove: true,),
                               ],
                             ),
                           ],
@@ -196,3 +186,4 @@ class _ScreenHomeState extends State<ScreenHome> {
     );
   }
 }
+
