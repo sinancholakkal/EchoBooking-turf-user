@@ -21,3 +21,12 @@ class RangeValueEvent extends SearchEvent{
   RangeValues rangeValue;
   RangeValueEvent({required this.rangeValue});
 }
+class DatePickerEvent extends SearchEvent{
+  BuildContext context;
+  DatePickerEvent({required this.context});
+}
+
+class TimePickerEvent extends SearchEvent{
+  BuildContext context;
+  TimePickerEvent({required this.context});
+}

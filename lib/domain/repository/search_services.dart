@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:echo_booking/domain/model/turf_model.dart';
 
@@ -6,7 +8,7 @@ class SearchServices {
     List<TurfModel> turfs = [];
     final String? searchQuery = querys["search"]?.toLowerCase();
     final String? Searchcategory = querys['category']?.toLowerCase();
-    final String? date = querys['date'];
+    final String date = querys['date'] ?? "null";
     final String? time = querys['time'];
     final String? startprice = querys['startprice'];
     final String? endprice = querys['endprice'];
@@ -14,25 +16,78 @@ class SearchServices {
     final ownerSnap = await instance.collection("owner").get();
     for (var ownerDoc in ownerSnap.docs) {
       final ownerData = ownerDoc.data();
+
       final turfDocs = await ownerDoc.reference.collection("turfs").get();
       if (turfDocs.docs.isNotEmpty) {
         for (var turf in turfDocs.docs) {
           bool isSearch = false;
+
           final turfData = turf.data();
           final String turfname = turfData['turfname'].toString().toLowerCase();
           final String category = turfData['catogery'].toString().toLowerCase();
+          final String address = turfData['landmark'].toString().toLowerCase();
+          log(address);
           if (searchQuery != null && turfname.contains(searchQuery) ||
-              searchQuery == category) {
+              searchQuery == category || address.contains(searchQuery!)) {
             isSearch = true;
           }
-          if(isSearch == true && startprice!=null && endprice !=null){
+          if (isSearch == true && startprice != null && endprice != null) {
             double start = double.parse(startprice);
             double end = double.parse(endprice);
             int price = int.parse(turfData["price"]);
-            if(!(start<=price && price<=end)){
+            if (!(start <= price && price <= end)) {
               isSearch = false;
             }
           }
+          final timeSlotesColle = ownerDoc.reference
+              .collection('turfs')
+              .doc(turf.id)
+              .collection('timeSlotes');
+          if (isSearch == true && date != "null") {
+         
+            int flag = 0;
+            final timeSlotes = await timeSlotesColle.get();
+            for (var timeSlote in timeSlotes.docs) {
+              
+              if (date == timeSlote.id) {
+                
+                // flag =1;
+                // break;
+                if (time != "null") {
+                  log("time entried");
+                  Map<String, dynamic> timeData = timeSlote.data();
+                  if (timeData.containsKey("time_slot") &&
+                      timeData["time_slot"] is List) {
+                    List<dynamic> timeSlotList = timeData["time_slot"];
+
+                    for (var slot in timeSlotList) {
+                      if (slot is Map<String, dynamic>) {
+                        if(slot['time'].toString().contains(time!)){
+                          flag =1;
+                          break;
+                        }
+                      }
+                    }
+                    if(flag==1)break;
+                  }
+                } else {
+                  flag = 1;
+                  break;
+                }
+              }
+            }
+            if (flag != 1) isSearch = false;
+          }
+          // if(isSearch==true && time !="null"){
+          //   final timeSlotes = await timeSlotesColle.get();
+          //   for(var timeSlote in timeSlotes.docs){
+          //     String dateKey = timeSlote.id;
+          //     Map<String, dynamic> timeData = timeSlote.data();
+          //     for(var timeSlote in timeDataList){
+          //       log(timeSlote.toString());
+          //     }
+          //   }
+          // }
           if (isSearch && turfData["reviewStatus"] == "true") {
             final turfModel = TurfModel(
               latitude: turfData['latitude'],

@@ -24,3 +24,12 @@ class RangeValueLoadedState extends SearchState{
   RangeValues rangeValue;
   RangeValueLoadedState({required this.rangeValue});
 }
+class DatePickerSuccessState extends SearchState{
+  String date;
+  DatePickerSuccessState({required this.date});
+}
+class TimePickerSuccessState extends SearchState{
+  String hour;
+  String minute;
+  TimePickerSuccessState({required this.hour,required this.minute});
+}

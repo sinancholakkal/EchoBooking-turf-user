@@ -104,174 +104,18 @@ class _ScreenSearchState extends State<ScreenSearch> {
               BlocBuilder<SearchBloc, SearchState>(
                 builder: (context, state) {
                   if (state is SearchLoadedState) {
-                    if (state.searchTurfs.isNotEmpty) {
-                      return IconButton(
-                          onPressed: () {
-                            //Show  bottom sheet------
-                            showBottomSheet(
-                              elevation: 20,
-                              backgroundColor:
-                                  const Color.fromARGB(255, 14, 11, 59),
-                              context: context,
-                              builder: (context) {
-                                // RangeValues _tempRangeValues =
-                                //     _currentRangeValues;
-
-                                return StatefulBuilder(
-                                  builder: (context, setModalState) {
-                                    return SizedBox(
-                                      height: 800,
-                                      width: double.infinity,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                IconButton(
-                                                    onPressed: () => Get.back(),
-                                                    icon: Icon(
-                                                      Icons.arrow_back,
-                                                      color: kWhite,
-                                                    )),
-                                                //Done button-----------
-                                                TextButton(
-                                                    onPressed: () {
-                                                      _searchController.text = (selectedChipIndex.value!=null)?choiceList[selectedChipIndex.value!]:_searchController.text;
-                                                      context
-                                                          .read<SearchBloc>()
-                                                          .add(SearchQueryEvent(
-                                                              searchQuery: {
-                                                                "search":
-                                                                    _searchController
-                                                                        .text,
-                                                                "startprice":
-                                                                    _currentRangeValues
-                                                                        .start
-                                                                        .toString(),
-                                                                "endprice":
-                                                                    _currentRangeValues
-                                                                        .end
-                                                                        .toString()
-                                                              }));
-                                                      Get.back();
-                                                    },
-                                                    child: Text(
-                                                      "Done",
-                                                      style: TextStyle(
-                                                          color: kWhite),
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 10),
-                                            child: TextWidget(text: "Price"),
-                                          ),
-                                          BlocBuilder<SearchBloc, SearchState>(
-                                            builder: (context, state) {
-                                              _currentRangeValues = (state
-                                                      is RangeValueLoadedState)
-                                                  ? state.rangeValue
-                                                  : _currentRangeValues;
-                                              return RangeSlider(
-                                                min: 0,
-                                                max: 2000,
-                                                divisions: 10,
-                                                values: _currentRangeValues,
-                                                labels: RangeLabels(
-                                                  _currentRangeValues.start
-                                                      .round()
-                                                      .toString(),
-                                                  _currentRangeValues.end
-                                                      .round()
-                                                      .toString(),
-                                                ),
-                                                onChanged: (value) {
-                                                  context
-                                                      .read<SearchBloc>()
-                                                      .add(RangeValueEvent(
-                                                          rangeValue: value));
-                                                },
-                                              );
-                                            },
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10, top: 10, bottom: 5),
-                                            child: TextWidget(text: "Category"),
-                                          ),
-                                          //category choice chip--------
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 10),
-                                            child: ValueListenableBuilder<int?>(
-                                              valueListenable:
-                                                  selectedChipIndex,
-                                              builder: (context, selectedIndex,
-                                                  child) {
-                                                return Wrap(
-                                                  spacing: 10,
-                                                  children:
-                                                      List.generate(3, (index) {
-                                                    return ChoiceChip(
-                                                      label: Text(
-                                                          choiceList[index]),
-                                                      selected: selectedIndex ==
-                                                          index,
-                                                      onSelected: (value) {
-                                                        selectedChipIndex
-                                                                .value =
-                                                            value
-                                                                ? index
-                                                                : null;
-                                                      },
-                                                      checkmarkColor:
-                                                          Colors.white,
-                                                      selectedColor:
-                                                          Colors.grey[850],
-                                                      backgroundColor:
-                                                          Colors.black,
-                                                      labelStyle: TextStyle(
-                                                          color: Colors.white),
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        side: BorderSide(
-                                                            color:
-                                                                Colors.white),
-                                                      ),
-                                                    );
-                                                  }),
-                                                );
-                                              },
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                            
-                          },
-                          icon: Icon(
-                            Icons.filter_alt,
-                            color: kWhite,
-                            size: 30,
-                          ));
-                    } else {
-                      return SizedBox();
-                    }
+                    return IconButton(
+                        onPressed: () {
+                          String? date;
+                          String? time;
+                          //Show  bottom sheet------
+                          filterBottumSheet(context, date, time);
+                        },
+                        icon: Icon(
+                          Icons.filter_alt,
+                          color: kWhite,
+                          size: 30,
+                        ));
                   } else {
                     return SizedBox();
                   }
@@ -337,6 +181,209 @@ class _ScreenSearchState extends State<ScreenSearch> {
           )
         ],
       )),
+    );
+  }
+
+  PersistentBottomSheetController filterBottumSheet(
+      BuildContext context, String? date, String? time) {
+    return showBottomSheet(
+      elevation: 20,
+      backgroundColor: const Color.fromARGB(255, 14, 11, 59),
+      context: context,
+      builder: (context) {
+        // RangeValues _tempRangeValues =
+        //     _currentRangeValues;
+
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return SizedBox(
+              height: 500,
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                            onPressed: () => Get.back(),
+                            icon: Icon(
+                              Icons.arrow_back,
+                              color: kWhite,
+                            )),
+                        //Done button-----------
+                        TextButton(
+                            onPressed: () {
+                              _searchController.text =
+                                  (selectedChipIndex.value != null)
+                                      ? choiceList[selectedChipIndex.value!]
+                                      : _searchController.text;
+                              context
+                                  .read<SearchBloc>()
+                                  .add(SearchQueryEvent(searchQuery: {
+                                    "search": _searchController.text,
+                                    "startprice":
+                                        _currentRangeValues.start.toString(),
+                                    "endprice":
+                                        _currentRangeValues.end.toString(),
+                                    "date": date ?? "null",
+                                    "time": time ?? "null",
+                                  }));
+                              Get.back();
+                              log(date.toString());
+                            },
+                            child: Text(
+                              "Done",
+                              style: TextStyle(color: kWhite),
+                            )),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: TextWidget(text: "Price"),
+                  ),
+                  BlocBuilder<SearchBloc, SearchState>(
+                    builder: (context, state) {
+                      _currentRangeValues = (state is RangeValueLoadedState)
+                          ? state.rangeValue
+                          : _currentRangeValues;
+                      return RangeSlider(
+                        min: 0,
+                        max: 2000,
+                        divisions: 10,
+                        values: _currentRangeValues,
+                        labels: RangeLabels(
+                          _currentRangeValues.start.round().toString(),
+                          _currentRangeValues.end.round().toString(),
+                        ),
+                        onChanged: (value) {
+                          context
+                              .read<SearchBloc>()
+                              .add(RangeValueEvent(rangeValue: value));
+                        },
+                      );
+                    },
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 10, top: 10, bottom: 5),
+                    child: TextWidget(text: "Category"),
+                  ),
+                  //category choice chip--------
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: ValueListenableBuilder<int?>(
+                      valueListenable: selectedChipIndex,
+                      builder: (context, selectedIndex, child) {
+                        return Wrap(
+                          spacing: 10,
+                          children: List.generate(3, (index) {
+                            return ChoiceChip(
+                              label: Text(choiceList[index]),
+                              selected: selectedIndex == index,
+                              onSelected: (value) {
+                                selectedChipIndex.value = value ? index : null;
+                              },
+                              checkmarkColor: Colors.white,
+                              selectedColor: Colors.grey[850],
+                              backgroundColor: Colors.black,
+                              labelStyle: TextStyle(color: Colors.white),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                side: BorderSide(color: Colors.white),
+                              ),
+                            );
+                          }),
+                        );
+                      },
+                    ),
+                  ),
+                  //Date picking-------
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 10, top: 10, bottom: 5),
+                    child: TextWidget(text: "Date"),
+                  ),
+
+                  BlocBuilder<SearchBloc, SearchState>(
+                    builder: (context, state) {
+                      if (state is DatePickerSuccessState) {
+                        date = state.date;
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: TextWidget(
+                          text: (date != null) ? date! : "No date selected",
+                          fontWeight: FontWeight.normal,
+                          size: 18,
+                        ),
+                      );
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 10,
+                    ),
+                    child: OutlinedButton(
+                        onPressed: () {
+                          context
+                              .read<SearchBloc>()
+                              .add(DatePickerEvent(context: context));
+                        },
+                        child: TextWidget(
+                          text: "Select Date",
+                          fontWeight: FontWeight.normal,
+                          size: 18,
+                        )),
+                  ),
+                  //Time Picker----------
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 10, top: 10, bottom: 5),
+                    child: TextWidget(text: "From Time"),
+                  ),
+                  BlocBuilder<SearchBloc, SearchState>(
+                    builder: (context, state) {
+                      if (state is TimePickerSuccessState) {
+                        time = "${state.hour}:${state.minute}";
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: TextWidget(
+                          text: (time != null) ? time! : "No time selected",
+                          fontWeight: FontWeight.normal,
+                          size: 18,
+                        ),
+                      );
+                    },
+                  ),
+                  BlocBuilder<SearchBloc, SearchState>(
+                    builder: (context, state) {
+                      return OutlinedButton(
+                          onPressed: () {
+                            if((state is DatePickerSuccessState || state is TimePickerSuccessState)){
+                              context
+                                .read<SearchBloc>()
+                                .add(TimePickerEvent(context: context));
+                            }
+                            
+                          },
+                          child: TextWidget(
+                            text: "Select Time",color: (state is DatePickerSuccessState || state is TimePickerSuccessState)?kWhite:Colors.grey,
+                            fontWeight: FontWeight.normal,
+                            size: 18,
+                          ));
+                    },
+                  )
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
