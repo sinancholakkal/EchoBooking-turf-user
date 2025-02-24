@@ -191,9 +191,6 @@ class _ScreenSearchState extends State<ScreenSearch> {
       backgroundColor: const Color.fromARGB(255, 14, 11, 59),
       context: context,
       builder: (context) {
-        // RangeValues _tempRangeValues =
-        //     _currentRangeValues;
-
         return StatefulBuilder(
           builder: (context, setModalState) {
             return SizedBox(

@@ -1,5 +1,6 @@
 import 'package:echo_booking/feature/presentation/bloc/auth_bloc/auth_bloc_bloc.dart';
 import 'package:echo_booking/feature/presentation/bloc/item_view/item_view_bloc.dart';
+import 'package:echo_booking/feature/presentation/bloc/payment_screen_bloc/payment_bloc.dart';
 import 'package:echo_booking/feature/presentation/bloc/search_bloc/search_bloc.dart';
 import 'package:echo_booking/feature/presentation/bloc/star_bloc/star_bloc.dart';
 import 'package:echo_booking/feature/presentation/bloc/turf_bloc/turf_bloc.dart';
@@ -41,10 +42,13 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => SearchBloc(),
         ),
+         BlocProvider(
+          create: (context) => PaymentBloc(),
+        ),
       ],
       child: GetMaterialApp(
         builder: (context, child) {
-        ToastContext().init(context);  // 👈 Initialize toast context here
+        ToastContext().init(context);
         return child!;
       },
         home: ScreenSplash(),

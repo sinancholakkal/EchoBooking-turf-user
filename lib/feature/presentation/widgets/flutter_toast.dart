@@ -2,14 +2,15 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-Future<void> flutterToast({required String msg}) {
+Future<void> flutterToast({required String msg,Color? color = Colors.transparent}) {
 
     return Fluttertoast.showToast(
+      
       msg: msg,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.transparent,
+      backgroundColor: color,
       textColor: kWhite,
-      fontSize: 20.0,
+      fontSize: 18.0,
     );
   }
