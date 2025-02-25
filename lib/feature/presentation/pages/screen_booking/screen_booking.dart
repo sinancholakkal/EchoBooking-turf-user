@@ -4,10 +4,12 @@ import 'package:echo_booking/core/constent/size/size.dart';
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/domain/model/turf_model.dart';
 import 'package:echo_booking/feature/presentation/bloc/payment_screen_bloc/payment_bloc.dart';
+import 'package:echo_booking/feature/presentation/bloc/user/user_bloc.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/card_turf_widget.dart';
-import 'package:echo_booking/feature/presentation/pages/screen_booking/widgets/BookingCardItemWidget.dart';
+import 'package:echo_booking/feature/presentation/pages/screen_booking/widgets/booking_cardItem_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_payment_success/screen_payment_success.dart';
 import 'package:echo_booking/feature/presentation/widgets/custom_button.dart';
+import 'package:echo_booking/feature/presentation/widgets/detals_card_widget.dart';
 import 'package:echo_booking/feature/presentation/widgets/flutter_toast.dart';
 import 'package:echo_booking/feature/presentation/widgets/loading_widget.dart';
 import 'package:echo_booking/feature/presentation/widgets/text_widget.dart';
@@ -34,6 +36,7 @@ class ScreenBooking extends StatefulWidget {
 class _ScreenBookingState extends State<ScreenBooking> {
   late num taxesAndFee;
   late Razorpay _razorpay;
+  String? paymentId;
   void openCheckout(amount) async {
     var options = {
       "key": 'rzp_test_4MBYamMKeUifHI',
@@ -50,13 +53,8 @@ class _ScreenBookingState extends State<ScreenBooking> {
   }
 
   void handlePaymentSuccess(PaymentSuccessResponse response) {
-    // Get.to(() => ScreenPaymentSuccess());
-    // flutterToast(msg: "Payment Successfully Completed",color: kGrey);
-    context.read<PaymentBloc>().add(PaymentSuccessEvent(
-        turfModel: widget.turfModel,
-        paymentId: response.paymentId!,
-        dateKey: widget.dateKey,
-        bookedTime: widget.time));
+    paymentId = response.paymentId;
+    context.read<UserBloc>().add(UserDataFetchingEvent());
   }
 
   void handlePaymentError(PaymentFailureResponse response) {
@@ -68,6 +66,8 @@ class _ScreenBookingState extends State<ScreenBooking> {
         msg: "Payment Successfull ${response.walletName!}", color: kGrey);
   }
 
+  late List<Map<String, String>> details;
+
   @override
   void initState() {
     _razorpay = Razorpay();
@@ -77,6 +77,15 @@ class _ScreenBookingState extends State<ScreenBooking> {
     int price = int.parse(widget.turfModel.price);
     taxesAndFee = price * (18 / 100);
     log(taxesAndFee.toString());
+
+    details = [
+      {"Time": widget.time},
+      {"Book amount": "₹${widget.turfModel.price}"},
+      {"Taxes & fees": taxesAndFee.toString()},
+      {
+        "Total Price": "${taxesAndFee + int.parse(widget.turfModel.price)}",
+      }
+    ];
     super.initState();
   }
 
@@ -90,16 +99,34 @@ class _ScreenBookingState extends State<ScreenBooking> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    return BlocListener<PaymentBloc, PaymentState>(
-      listener: (context, state) {
-        if(state is PaymentSuccessLoadingState){
-          loadingWidget(context);
-        }else if(state is PaymentSuccessState){
-          Navigator.pop(context);
-          Get.to(() => ScreenPaymentSuccess());
-    flutterToast(msg: "Payment Successfully Completed",color: kGrey);
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<PaymentBloc, PaymentState>(
+          listener: (context, state) {
+            if (state is PaymentSuccessLoadingState) {
+              loadingWidget(context);
+            } else if (state is PaymentSuccessState) {
+              Navigator.pop(context);
+              Get.to(() => ScreenPaymentSuccess());
+              flutterToast(msg: "Payment Successfully Completed", color: kGrey);
+            }
+          },
+        ),
+        BlocListener<UserBloc, UserState>(
+          listener: (context, state) {
+            if (state is UserLoadedState) {
+              widget.turfModel.price =
+                  widget.turfModel.price + taxesAndFee.toString();
+              context.read<PaymentBloc>().add(PaymentSuccessEvent(
+                  userModel: state.user!,
+                  turfModel: widget.turfModel,
+                  paymentId: paymentId!,
+                  dateKey: widget.dateKey,
+                  bookedTime: widget.time));
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -175,45 +202,7 @@ class _ScreenBookingState extends State<ScreenBooking> {
                 SizedBox(
                   height: screenHeight * 0.18,
                 ),
-                Container(
-                  padding: EdgeInsets.all(10),
-                  width: screenWidth * .85,
-                  height: 300,
-                  decoration: BoxDecoration(
-                      gradient: linearGradient,
-                      borderRadius: BorderRadius.circular(15)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      BookingCardItemWidget(
-                        leftText: "Time",
-                        rightText: widget.time,
-                      ),
-                      BookingCardItemWidget(
-                        leftText: "Book amount",
-                        rightText: "₹${widget.turfModel.price}",
-                      ),
-                      BookingCardItemWidget(
-                        leftText: "Taxes & fees",
-                        rightText: taxesAndFee.toString(),
-                      ),
-                      BookingCardItemWidget(
-                        leftText: "Taxes & fees",
-                        rightText: taxesAndFee.toString(),
-                        divideColor: kWhite,
-                      ),
-                      height10,
-                      BookingCardItemWidget(
-                        leftText: "Total Price",
-                        rightText:
-                            "${taxesAndFee + int.parse(widget.turfModel.price)}",
-                        divider: false,
-                        textColor: kWhite,
-                      ),
-                    ],
-                  ),
-                ),
+                DetailsCardWidget(screenWidth: screenWidth, details: details,type: DetailsCardType.fromItemView,),
                 SizedBox(
                   height: screenHeight * 0.06,
                 ),

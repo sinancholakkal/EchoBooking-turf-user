@@ -4,7 +4,7 @@ class TurfModel {
   final String turfName;
   final String phone;
   final String email;
-  final String price;
+   String price;
   final String state;
   final String country;
   final String catogery;

@@ -7,5 +7,6 @@ class PaymentSuccessEvent extends PaymentEvent{
   final String paymentId;
   final String dateKey;
   final String bookedTime;
-  PaymentSuccessEvent({required this.turfModel,required this.paymentId,required this.dateKey,required this.bookedTime});
+  final UserModel userModel;
+  PaymentSuccessEvent({required this.turfModel,required this.userModel,required this.paymentId,required this.dateKey,required this.bookedTime});
 }

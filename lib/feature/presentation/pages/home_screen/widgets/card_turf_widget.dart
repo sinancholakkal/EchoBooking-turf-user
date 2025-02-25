@@ -2,6 +2,7 @@ import 'package:echo_booking/core/constent/size/size.dart';
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/domain/model/turf_model.dart';
 import 'package:echo_booking/feature/presentation/bloc/star_bloc/star_bloc.dart';
+import 'package:echo_booking/feature/presentation/pages/booking_turf_view/screen_booking_turf_view.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_item_view/screen_item_view.dart';
 import 'package:echo_booking/feature/presentation/widgets/text_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,7 +12,7 @@ import 'package:get/get.dart';
 
 class CardTurfsWidget extends StatelessWidget {
   final ActionTypeFrom type;
-  final TurfModel turfModel;
+  final dynamic turfModel;
   int index;
   String heroTag;
   CardTurfsWidget({
@@ -31,14 +32,18 @@ class CardTurfsWidget extends StatelessWidget {
       padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
       child: GestureDetector(
         onTap: () {
-          Get.to(
-              () => ScreenItemView(
-                    type: type,
-                    turfmodel: turfModel,
-                    tag: heroTag,
-                  ),
-              transition: Transition.circularReveal,
-              duration: Duration(milliseconds: 800));
+          if (ActionTypeFrom.booking == type) {
+            Get.to(()=>ScreenBookingTurfView(tag:heroTag,turfmodel: turfModel,));
+          } else {
+            Get.to(
+                () => ScreenItemView(
+                      type: type,
+                      turfmodel: turfModel,
+                      tag: heroTag,
+                    ),
+                transition: Transition.circularReveal,
+                duration: Duration(milliseconds: 800));
+          }
         },
         child: Container(
           height: profilecardHeight,
@@ -89,6 +94,13 @@ class CardTurfsWidget extends StatelessWidget {
                           size: 14,
                         ),
                       ),
+                       (ActionTypeFrom.booking==type)?TextWidget(
+                        text: turfModel.status,
+                        color: Colors.red,
+                        size: 14,
+                        fontWeight: FontWeight.bold,
+                      ):SizedBox()
+                         
                     ],
                   ),
                 ),
@@ -98,9 +110,8 @@ class CardTurfsWidget extends StatelessWidget {
                       iconColor: kWhite,
                       itemBuilder: (context) => [
                         PopupMenuItem(
-                          onTap: ()=>context
-                  .read<StarBloc>()
-                  .add(RemoveTurfStarEvent(turfId: turfModel.turfId)),
+                          onTap: () => context.read<StarBloc>().add(
+                              RemoveTurfStarEvent(turfId: turfModel.turfId)),
                           child: Text("Remove"),
                         ),
                       ],
@@ -114,4 +125,4 @@ class CardTurfsWidget extends StatelessWidget {
   }
 }
 
-enum ActionTypeFrom { star, noStar }
+enum ActionTypeFrom { star, noStar, booking }

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:echo_booking/domain/model/booking_turf_model.dart';
 import 'package:echo_booking/domain/model/turf_model.dart';
 import 'package:echo_booking/domain/repository/auth_service.dart';
 import 'package:echo_booking/domain/repository/user_service.dart';
@@ -23,8 +24,7 @@ class TurfService {
       if (turfDocs.docs.isNotEmpty) {
         for (var turf in turfDocs.docs) {
           final turfData = turf.data();
-          if (
-              turfData["reviewStatus"] == "true") {
+          if (turfData["reviewStatus"] == "true") {
             log(turfData.toString());
 
             final turfModel = TurfModel(
@@ -143,5 +143,46 @@ class TurfService {
       await doc.reference.delete();
     }
     await turfDoc.delete();
+  }
+
+  Future<List<BookingTurfmodel>> fetchBookings() async {
+    List<BookingTurfmodel> turfs = [];
+    final snapshot = await FirebaseFirestore.instance
+        .collection("userApp")
+        .doc(AuthService().getCurrentUser()!.uid)
+        .collection("bookings")
+        .get();
+
+    for (var turfData in snapshot.docs) {
+      final turf = turfData.data();
+      String dateAndTime =
+          "${turf['bookingdate']} ${turf['bookingtime'].toString().split(" ")[2]}";
+      DateTime givenTime = DateTime.parse(dateAndTime);
+      DateTime currentTime = DateTime.now();
+      String status = "";
+      if (givenTime.isAfter(currentTime)) {
+        status = "Live";
+      } else {
+        status = "Closed";
+      }
+      log(currentTime.toString());
+      log(givenTime.toString());
+      log(status);
+      final bookingTurfModel = BookingTurfmodel(
+          bookingDate: turf['bookingdate'],
+          bookingTime: turf['bookingtime'],
+          catogery: turf['catogery'],
+          images: turf['images'],
+          includes: turf['includes'],
+          latitude: turf['latitude'],
+          longitude: turf['longitude'],
+          turfName: turf['turfname'],
+          turfId: turf['turfid'],
+          landmark: turf['landmark'],
+          status: status);
+
+      turfs.add(bookingTurfModel);
+    }
+    return turfs;
   }
 }

@@ -1,0 +1,26 @@
+class BookingTurfmodel {
+  final String bookingDate; //
+  final String bookingTime; //
+  final String catogery; //
+  final List<dynamic> images; //
+  final String includes; //
+  final String latitude;
+  final String longitude;
+  final String turfName; //
+  final String turfId;
+  final String landmark; //
+  final String status;
+  BookingTurfmodel({
+    required this.bookingDate,
+    required this.landmark,
+    required this.bookingTime,
+    required this.catogery,
+    required this.images,
+    required this.includes,
+    required this.latitude,
+    required this.longitude,
+    required this.turfName,
+    required this.turfId,
+    required this.status,
+  });
+}

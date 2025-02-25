@@ -31,7 +31,7 @@ import 'package:get/get.dart';
 
 class ScreenItemView extends StatefulWidget {
   String tag;
-  final TurfModel turfmodel;
+  final dynamic turfmodel;
   final ActionTypeFrom type;
   ScreenItemView(
       {super.key,

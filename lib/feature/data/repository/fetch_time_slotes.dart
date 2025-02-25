@@ -32,15 +32,27 @@ Future<Map<String, List<Map<String, dynamic>>>> fetchingTimeSlots(
 
         for (var slot in timeSlotList) {
           if (slot is Map<String, dynamic>) {
+            String dateAndTime =
+                "$dateKey ${slot['time'].toString().split(" ")[2]}";
+           
+            DateTime givenTime = DateTime.parse(dateAndTime);
+            DateTime currentTime = DateTime.now();
+            if (givenTime.isBefore(currentTime)) {
+               log(dateAndTime);
+               slot = {
+                'time':slot['time'],
+                'isAvailable':false,
+               };
+               
+            }
             timeSlotsMap[dateKey]?.add(slot);
           }
         }
       } else {
         timeSlotsMap[dateKey]?.add(timeData);
       }
-    }else{
-      await snapshotRef
-      .doc(dateKey).delete();
+    } else {
+      await snapshotRef.doc(dateKey).delete();
       log("$date deleted----------");
     }
   }

@@ -10,7 +10,7 @@ class CarouselDobtsBuilderWidget extends StatelessWidget {
     required this.widget,
   });
 
-  final ScreenItemView widget;
+  final dynamic widget;
 
   @override
   Widget build(BuildContext context) {

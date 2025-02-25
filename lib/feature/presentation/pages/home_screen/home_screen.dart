@@ -6,6 +6,7 @@ import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/domain/repository/auth_service.dart';
 import 'package:echo_booking/domain/repository/user_service.dart';
 import 'package:echo_booking/feature/presentation/bloc/user/user_bloc.dart';
+import 'package:echo_booking/feature/presentation/pages/home_screen/tabs/booking_tab.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/tabs/home_tab.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/tabs/star_tab.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/search_widget.dart';
@@ -167,10 +168,7 @@ class _ScreenHomeState extends State<ScreenHome> {
               body: TabBarView(
                 children: [
                   HomeTab(),
-                  Text(
-                    "22222222222222222",
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  BookingTab(),
                   StarTab(),
                 ],
               ),

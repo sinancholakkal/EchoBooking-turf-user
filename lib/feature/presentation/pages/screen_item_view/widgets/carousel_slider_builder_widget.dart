@@ -14,7 +14,7 @@ class CarouselSlideBuilderWidget extends StatelessWidget {
     required this.screenWidth,
   });
 
-  final ScreenItemView widget;
+  final dynamic widget;
   final double screenWidth;
 
   @override
