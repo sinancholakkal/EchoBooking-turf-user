@@ -111,13 +111,24 @@ class CarouselSlideBuilderWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(cardRadius),
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(cardRadius),
-                  child: Image.network(
-                    widget.turfmodel.images[index],
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                child: (index == 0)
+                    ? Hero(
+                        tag: widget.tag,
+                        child: ClipRRect(
+                          borderRadius:
+                              BorderRadius.circular(cardRadius),
+                          child: Image.network(
+                            fit: BoxFit.cover,
+                            widget.turfmodel.images[index],
+                          ),
+                        ))
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(cardRadius),
+                        child: Image.network(
+                          fit: BoxFit.cover,
+                          widget.turfmodel.images[index],
+                        ),
+                      )
               ),
               // View details button on the carousel------------------
               Positioned(
