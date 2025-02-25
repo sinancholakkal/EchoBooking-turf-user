@@ -10,7 +10,9 @@ class BookingTurfmodel {
   final String turfId;
   final String landmark; //
   final String status;
+  final String price;
   BookingTurfmodel({
+    required this.price,
     required this.bookingDate,
     required this.landmark,
     required this.bookingTime,

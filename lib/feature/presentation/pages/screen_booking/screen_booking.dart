@@ -116,7 +116,7 @@ class _ScreenBookingState extends State<ScreenBooking> {
           listener: (context, state) {
             if (state is UserLoadedState) {
               widget.turfModel.price =
-                  widget.turfModel.price + taxesAndFee.toString();
+                  "${taxesAndFee + int.parse(widget.turfModel.price)}";
               context.read<PaymentBloc>().add(PaymentSuccessEvent(
                   userModel: state.user!,
                   turfModel: widget.turfModel,

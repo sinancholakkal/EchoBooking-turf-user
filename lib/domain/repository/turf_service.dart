@@ -169,6 +169,7 @@ class TurfService {
       log(givenTime.toString());
       log(status);
       final bookingTurfModel = BookingTurfmodel(
+        price: turf['price'],
           bookingDate: turf['bookingdate'],
           bookingTime: turf['bookingtime'],
           catogery: turf['catogery'],
@@ -181,7 +182,7 @@ class TurfService {
           landmark: turf['landmark'],
           status: status);
 
-      turfs.add(bookingTurfModel);
+      (status=='Live')?turfs.insert(0, bookingTurfModel):turfs.add(bookingTurfModel);
     }
     return turfs;
   }

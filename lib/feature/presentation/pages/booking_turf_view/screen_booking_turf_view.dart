@@ -31,6 +31,8 @@ class _ScreenBookingTurfViewState extends State<ScreenBookingTurfView> {
       {'Category': widget.turfmodel.catogery},
       {'Landmark': widget.turfmodel.landmark},
       {'Includes': widget.turfmodel.includes},
+      {'Price': "₹${widget.turfmodel.price}"},
+      {'Payment': "Success"},
       {'Status': widget.turfmodel.status},
     ];
     super.initState();
@@ -51,39 +53,41 @@ class _ScreenBookingTurfViewState extends State<ScreenBookingTurfView> {
         decoration: BoxDecoration(
           gradient: backGroundGradient,
         ),
-        child: Column(
-          children: [
-            CarouselSlideBuilderWidget(
-                widget: widget, screenWidth: screenWidth),
-            SizedBox(
-              height: 4,
-            ),
-            //carousal dobts.............
-            CarouselDobtsBuilderWidget(widget: widget),
-            SizedBox(
-              height: 30,
-            ),
-            //Displat the card and details-------------
-            DetailsCardWidget(
-              screenWidth: screenWidth,
-              details: details,
-              type: DetailsCardType.fromBooking,
-            ),
-            height10,
-            //Outline button for view location-----------
-            OutlinedButton.icon(
-              onPressed: () {
-                context.read<ItemViewBloc>().add(GoogleMapLauncherEvent(
-                    position:
-                        "${widget.turfmodel.latitude},${widget.turfmodel.longitude}"));
-              },
-              icon: Icon(
-                Icons.location_on,
-                color: Colors.red,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              CarouselSlideBuilderWidget(
+                  widget: widget, screenWidth: screenWidth),
+              SizedBox(
+                height: 4,
               ),
-              label: TextWidget(text: "View Location"),
-            )
-          ],
+              //carousal dobts.............
+              CarouselDobtsBuilderWidget(widget: widget),
+              SizedBox(
+                height: 30,
+              ),
+              //Displat the card and details-------------
+              DetailsCardWidget(
+                screenWidth: screenWidth,
+                details: details,
+                type: DetailsCardType.fromBooking,
+              ),
+              height10,
+              //Outline button for view location-----------
+              OutlinedButton.icon(
+                onPressed: () {
+                  context.read<ItemViewBloc>().add(GoogleMapLauncherEvent(
+                      position:
+                          "${widget.turfmodel.latitude},${widget.turfmodel.longitude}"));
+                },
+                icon: Icon(
+                  Icons.location_on,
+                  color: Colors.red,
+                ),
+                label: TextWidget(text: "View Location"),
+              )
+            ],
+          ),
         ),
       ),
     );
