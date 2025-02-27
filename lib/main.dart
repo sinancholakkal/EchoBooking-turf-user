@@ -4,6 +4,7 @@ import 'package:echo_booking/feature/presentation/bloc/item_view/item_view_bloc.
 import 'package:echo_booking/feature/presentation/bloc/payment_screen_bloc/payment_bloc.dart';
 import 'package:echo_booking/feature/presentation/bloc/search_bloc/search_bloc.dart';
 import 'package:echo_booking/feature/presentation/bloc/star_bloc/star_bloc.dart';
+import 'package:echo_booking/feature/presentation/bloc/star_rating_bloc/star_rating_bloc.dart';
 import 'package:echo_booking/feature/presentation/bloc/turf_bloc/turf_bloc.dart';
 import 'package:echo_booking/feature/presentation/bloc/user/user_bloc.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_splash/screen_splash.dart';
@@ -48,6 +49,9 @@ class MyApp extends StatelessWidget {
         ),
          BlocProvider(
           create: (context) => BookingBloc(),
+        ),
+         BlocProvider(
+          create: (context) => StarRatingBloc(),
         ),
       ],
       child: GetMaterialApp(

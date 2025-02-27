@@ -20,6 +20,7 @@ import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets
 import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/expandeble_floating_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/includes_builder_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/star_animation.dart';
+import 'package:echo_booking/feature/presentation/widgets/animated_star_rating.dart';
 import 'package:echo_booking/feature/presentation/widgets/custom_button.dart';
 import 'package:echo_booking/feature/presentation/widgets/flutter_toast.dart';
 import 'package:echo_booking/feature/presentation/widgets/text_widget.dart';
@@ -253,40 +254,39 @@ class _ScreenItemViewState extends State<ScreenItemView> {
                                                                           .length,
                                                                       (index) {
                                                                 return ChoiceChip(
-                                                                  checkmarkColor:
-                                                                      kWhite,
-                                                                  selectedColor:
-                                                                      Colors.grey[
-                                                                          850],
-                                                                  labelStyle:
-                                                                      TextStyle(
-                                                                          color:
-                                                                            slots[index]['isAvailable']==false?const Color.fromARGB(83, 158, 158, 158):kWhite),
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .black,
-                                                                  shape: RoundedRectangleBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              10),
-                                                                      side: BorderSide(
-                                                                          color:
-                                                                              slots[index]['isAvailable']==false?const Color.fromARGB(83, 158, 158, 158):kWhite)),
-                                                                  label: Text(slots[
-                                                                          index]
-                                                                      ['time']),
-                                                                  selected:
-                                                                      selectTime ==
-                                                                          index,
-                                                                  onSelected:slots[index]['isAvailable']==true?
-                                                                      (value) {
-                                                                    selectedTimeSlotIndex
-                                                                            .value =
-                                                                        value
-                                                                            ? index
-                                                                            : null;
-                                                                  }:(value){}
-                                                                );
+                                                                    checkmarkColor:
+                                                                        kWhite,
+                                                                    selectedColor:
+                                                                        Colors.grey[
+                                                                            850],
+                                                                    labelStyle: TextStyle(
+                                                                        color: slots[index]['isAvailable'] == false
+                                                                            ? const Color.fromARGB(
+                                                                                83,
+                                                                                158,
+                                                                                158,
+                                                                                158)
+                                                                            : kWhite),
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .black,
+                                                                    shape: RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                10),
+                                                                        side: BorderSide(
+                                                                            color: slots[index]['isAvailable'] == false
+                                                                                ? const Color.fromARGB(83, 158, 158, 158)
+                                                                                : kWhite)),
+                                                                    label: Text(slots[index]['time']),
+                                                                    selected: selectTime == index,
+                                                                    onSelected: slots[index]['isAvailable'] == true
+                                                                        ? (value) {
+                                                                            selectedTimeSlotIndex.value = value
+                                                                                ? index
+                                                                                : null;
+                                                                          }
+                                                                        : (value) {});
                                                               })),
                                                         );
                                                       }
@@ -300,6 +300,76 @@ class _ScreenItemViewState extends State<ScreenItemView> {
                                   SizedBox(
                                     height: 20,
                                   ),
+                                  //Rating field---------
+                                  Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Align(
+                                      alignment: Alignment.topLeft,
+                                      child: TextWidget(
+                                        text: "Rating & Reviews",
+                                      ),
+                                    ),
+                                  ),
+
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Align(
+                                      alignment: Alignment.topLeft,
+                                      child: AnimatedStarRatingWidget(
+                                        onChanged: (val) {},
+                                        initial: 3,
+                                        readOnly: true,
+                                      ),
+                                    ),
+                                  ),
+                                  ListView.separated(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: 4,
+                                    separatorBuilder: (context, index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                                        child: Divider(
+                                          color: kGrey,
+                                          height: 0.1,
+                                          thickness: 0.3,
+                                        ),
+                                      );
+                                    },
+                                    itemBuilder: (context, index) {
+                                      return ListTile(
+                                        title: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            TextWidget(text: "Muhammed sinan",size: 18,color: Colors.white60,),
+                                            Row(
+                                              spacing: 6,
+                                              children: [
+                                                AnimatedStarRatingWidget(onChanged: (val){}, initial: 4.0,starSize: 10,readOnly: true,),
+                                                TextWidget(text: "4.0",size: 13,fontWeight: FontWeight.bold,)
+                                              ],
+                                            ),
+                                            TextWidget(text: "The turf is very awesome, Especially the ampience. There providing free glow and padding for cricket",maxLine: 10,size: 15,)
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  //View All feedback---------------
+                                  Container(
+                                    margin: EdgeInsets.symmetric(horizontal: 22),
+                                    width: double.infinity,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: kWhite),
+                                      borderRadius: BorderRadius.circular(12)
+                                    ),
+                                    child: Center(
+                                      child: TextWidget(text: "View All",size: 16,),
+                                    ),
+                                  ),
+                                  SizedBox(height: 20,),
                                   //Location button-------------------
                                   Align(
                                       alignment: Alignment.bottomCenter,

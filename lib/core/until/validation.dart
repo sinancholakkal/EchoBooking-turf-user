@@ -32,9 +32,9 @@ class Validation {
     }
   }
 
-  static String? nameValidate({required String? value}) {
+  static String? nameValidate({required String? value,String comment = "Name"}) {
     if (value == null || value.isEmpty) {
-      return "Name is required";
+      return "$comment is required";
     } else {
       return null;
     }

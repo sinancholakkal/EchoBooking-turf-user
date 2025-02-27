@@ -96,7 +96,7 @@ class CardTurfsWidget extends StatelessWidget {
                       ),
                        (ActionTypeFrom.booking==type)?TextWidget(
                         text: turfModel.status,
-                        color: Colors.red,
+                        color: (turfModel.status=="Closed")?Colors.red:Colors.green,
                         size: 14,
                         fontWeight: FontWeight.bold,
                       ):SizedBox()
