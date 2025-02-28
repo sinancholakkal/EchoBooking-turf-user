@@ -21,7 +21,7 @@ class AlertDialogWidget extends StatelessWidget {
       backgroundColor: cardBgColor,
       title: TextWidget(
         text: title,
-        color: kBlack,
+        color: kWhite,
       ),
       content: TextWidget(
         text: content,

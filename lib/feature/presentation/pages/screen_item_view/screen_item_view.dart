@@ -8,10 +8,12 @@ import 'package:echo_booking/core/constent/size/size.dart';
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/domain/model/turf_model.dart';
 import 'package:echo_booking/domain/repository/auth_service.dart';
+import 'package:echo_booking/domain/repository/star_rating_service.dart';
 import 'package:echo_booking/feature/data/repository/call_launcher.dart';
 import 'package:echo_booking/feature/data/repository/fetch_time_slotes.dart';
 import 'package:echo_booking/feature/data/repository/whatsapp_launcher.dart';
 import 'package:echo_booking/feature/presentation/bloc/item_view/item_view_bloc.dart';
+import 'package:echo_booking/feature/presentation/bloc/star_rating_bloc/star_rating_bloc.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/card_turf_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_booking/screen_booking.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/carousel_dobts_builder.dart';
@@ -20,9 +22,14 @@ import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets
 import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/expandeble_floating_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/includes_builder_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/star_animation.dart';
+import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/view_all_button.dart';
+import 'package:echo_booking/feature/presentation/pages/screen_view_all_reviews/screen_view_all_reviews.dart';
 import 'package:echo_booking/feature/presentation/widgets/animated_star_rating.dart';
+import 'package:echo_booking/feature/presentation/widgets/circular_widget.dart';
 import 'package:echo_booking/feature/presentation/widgets/custom_button.dart';
+import 'package:echo_booking/feature/presentation/widgets/divider_widget.dart';
 import 'package:echo_booking/feature/presentation/widgets/flutter_toast.dart';
+import 'package:echo_booking/feature/presentation/widgets/rating_list_tile.dart';
 import 'package:echo_booking/feature/presentation/widgets/text_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +69,8 @@ class _ScreenItemViewState extends State<ScreenItemView> {
 
   @override
   void initState() {
+    context.read<StarRatingBloc>().add(FetchAllReviewsEvent(
+        ownerId: widget.turfmodel.ownerId, turfId: widget.turfmodel.turfId));
     context.read<ItemViewBloc>().add(CarouselDoubt(currentDobt: 0));
     super.initState();
   }
@@ -161,14 +170,17 @@ class _ScreenItemViewState extends State<ScreenItemView> {
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8.0),
-                                    child: TextWidget(
-                                      text: (!widget.turfmodel.landmark
-                                              .endsWith("kerala")
-                                          ? "${widget.turfmodel.landmark}, ${widget.turfmodel.state}"
-                                          : widget.turfmodel.landmark),
-                                      size: 17,
-                                      maxLine: 3,
-                                      color: Colors.grey,
+                                    child: Align(
+                                      alignment: Alignment.topLeft,
+                                      child: TextWidget(
+                                        text: (!widget.turfmodel.landmark
+                                                .endsWith("kerala")
+                                            ? "${widget.turfmodel.landmark}, ${widget.turfmodel.state}"
+                                            : widget.turfmodel.landmark),
+                                        size: 17,
+                                        maxLine: 3,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                   ),
                                   height10,
@@ -311,65 +323,84 @@ class _ScreenItemViewState extends State<ScreenItemView> {
                                     ),
                                   ),
 
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: Align(
-                                      alignment: Alignment.topLeft,
-                                      child: AnimatedStarRatingWidget(
-                                        onChanged: (val) {},
-                                        initial: 3,
-                                        readOnly: true,
-                                      ),
-                                    ),
-                                  ),
-                                  ListView.separated(
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemCount: 4,
-                                    separatorBuilder: (context, index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                                        child: Divider(
-                                          color: kGrey,
-                                          height: 0.1,
-                                          thickness: 0.3,
-                                        ),
-                                      );
-                                    },
-                                    itemBuilder: (context, index) {
-                                      return ListTile(
-                                        title: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            TextWidget(text: "Muhammed sinan",size: 18,color: Colors.white60,),
-                                            Row(
-                                              spacing: 6,
+                                  bloc.BlocBuilder<StarRatingBloc,
+                                      StarRatingState>(
+                                    builder: (context, state) {
+                                      if (state
+                                          is FetchAllReviewsLoadingState) {
+                                        return CircularWidget();
+                                      } else if (state
+                                          is FetchAllReviewsLoadedState) {
+                                        if (state.reviews.isEmpty) {
+                                          return TextWidget(
+                                            text: "Not posted",
+                                            
+                                          );
+                                        } else {
+                                          double r = (double.parse(
+                                                  state.reviews['rating']) /
+                                              int.parse(state
+                                                  .reviews['reviewcount']));
+                                          List<dynamic> reviews =
+                                              state.reviews['reviews'];
+                                          return SizedBox(
+                                            child: Column(
                                               children: [
-                                                AnimatedStarRatingWidget(onChanged: (val){}, initial: 4.0,starSize: 10,readOnly: true,),
-                                                TextWidget(text: "4.0",size: 13,fontWeight: FontWeight.bold,)
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10),
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.topLeft,
+                                                    child:
+                                                        AnimatedStarRatingWidget(
+                                                      onChanged: (val) {},
+                                                      initial: r,
+                                                      readOnly: true,
+                                                    ),
+                                                  ),
+                                                ),
+                                                ListView.separated(
+                                                  shrinkWrap: true,
+                                                  physics:
+                                                      NeverScrollableScrollPhysics(),
+                                                  itemCount:
+                                                      (reviews.length > 4)
+                                                          ? 5
+                                                          : reviews.length,
+                                                  separatorBuilder:
+                                                      (context, index) {
+                                                    return DividerWidget();
+                                                  },
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    if (index == 4) {
+                                                      return //View All feedback---------------
+                                                          ReviewAllButtonWidget(
+                                                              onTap: () => Get.to(()=>ScreenViewAllReviews(reviews: reviews),transition: Transition.cupertino),);
+                                                    } else {
+                                                      //List tile of display the review----
+                                                      Map<String, dynamic>
+                                                          data = reviews[index];
+                                                      return RatingListTileWidget(
+                                                          data: data);
+                                                    }
+                                                  },
+                                                ),
                                               ],
                                             ),
-                                            TextWidget(text: "The turf is very awesome, Especially the ampience. There providing free glow and padding for cricket",maxLine: 10,size: 15,)
-                                          ],
-                                        ),
-                                      );
+                                          );
+                                        }
+                                      } else {
+                                        return SizedBox();
+                                      }
                                     },
                                   ),
-                                  //View All feedback---------------
-                                  Container(
-                                    margin: EdgeInsets.symmetric(horizontal: 22),
-                                    width: double.infinity,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: kWhite),
-                                      borderRadius: BorderRadius.circular(12)
-                                    ),
-                                    child: Center(
-                                      child: TextWidget(text: "View All",size: 16,),
-                                    ),
+
+                                  SizedBox(
+                                    height: 20,
                                   ),
-                                  SizedBox(height: 20,),
                                   //Location button-------------------
                                   Align(
                                       alignment: Alignment.bottomCenter,
@@ -455,3 +486,6 @@ class _ScreenItemViewState extends State<ScreenItemView> {
     );
   }
 }
+
+
+

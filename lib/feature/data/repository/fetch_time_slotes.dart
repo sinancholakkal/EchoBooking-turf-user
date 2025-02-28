@@ -22,7 +22,9 @@ Future<Map<String, List<Map<String, dynamic>>>> fetchingTimeSlots(
     Map<String, dynamic> timeData = timeSlot.data();
     int date = int.parse(dateKey.split("-")[2]);
     int currentDate = DateTime.now().day;
-    if (date >= currentDate) {
+    int month = int.parse(dateKey.split("-")[1]);
+      int todayMonth = DateTime.now().month;
+    if (date >= currentDate || month>=todayMonth) {
       if (!timeSlotsMap.containsKey(dateKey)) {
         timeSlotsMap[dateKey] = [];
       }

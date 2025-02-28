@@ -169,7 +169,11 @@ class TurfService {
       log(givenTime.toString());
       log(status);
       final bookingTurfModel = BookingTurfmodel(
+
+        ownerId: turf['ownerid'],
+        userName: turf['username'],
         price: turf['price'],
+        review: turf['review'],
           bookingDate: turf['bookingdate'],
           bookingTime: turf['bookingtime'],
           catogery: turf['catogery'],

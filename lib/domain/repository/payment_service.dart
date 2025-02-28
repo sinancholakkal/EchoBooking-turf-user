@@ -62,7 +62,7 @@ class PaymentService {
     }
   }
 
-  Future<void>addBookingTurf({required TurfModel turfModel,required String date,required String time,required String paymentId})async{
+  Future<void>addBookingTurf({required TurfModel turfModel,required String date,required String time,required String paymentId,required String userName})async{
     log("Add bookings called");
     final User? user= AuthService().getCurrentUser();
     await FirebaseFirestore.instance
@@ -88,6 +88,8 @@ class PaymentService {
       'bookingtime':time,
       'bookingdate':date,
       'paymentid':paymentId,
+      'ownerid':turfModel.ownerId,
+      'username':userName
     });
   log("Booking added===================");
   }

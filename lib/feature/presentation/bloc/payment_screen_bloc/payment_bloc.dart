@@ -15,7 +15,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
       emit(PaymentSuccessLoadingState());
       try{
         await PaymentService().disableTimeSlot(turfmodel: event.turfModel, datekey: event.dateKey, bookedTime: event.bookedTime);
-        await PaymentService().addBookingTurf(turfModel: event.turfModel,date: event.dateKey,paymentId: event.paymentId,time: event.bookedTime);
+        await PaymentService().addBookingTurf(turfModel: event.turfModel,date: event.dateKey,paymentId: event.paymentId,time: event.bookedTime,userName:event.userModel.name);
         await PaymentService().updateInOwner(date: event.dateKey,paymentId: event.paymentId, time: event.bookedTime,turfModel: event.turfModel,userModel: event.userModel);
         emit(PaymentSuccessState());
       }catch (e){

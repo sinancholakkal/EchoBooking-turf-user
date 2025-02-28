@@ -71,6 +71,7 @@ class _ScreenBookingState extends State<ScreenBooking> {
 
   @override
   void initState() {
+    
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);

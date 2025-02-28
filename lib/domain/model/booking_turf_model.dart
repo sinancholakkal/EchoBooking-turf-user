@@ -11,6 +11,9 @@ class BookingTurfmodel {
   final String landmark; //
   final String status;
   final String price;
+  final String ownerId;
+  final String userName;
+  Map<String,dynamic>?review;
   BookingTurfmodel({
     required this.price,
     required this.bookingDate,
@@ -24,5 +27,8 @@ class BookingTurfmodel {
     required this.turfName,
     required this.turfId,
     required this.status,
+    required this.ownerId,
+    required this.userName,
+    this.review
   });
 }
