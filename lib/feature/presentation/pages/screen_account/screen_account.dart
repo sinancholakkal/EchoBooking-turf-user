@@ -2,6 +2,7 @@ import 'package:echo_booking/core/constent/size/size.dart';
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/domain/repository/auth_service.dart';
 import 'package:echo_booking/feature/presentation/bloc/user/user_bloc.dart';
+import 'package:echo_booking/feature/presentation/pages/screen_account/widget/log_out_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_account/widget/profile_card_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_account/widget/profile_items_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_personal_details/screen_personal_details.dart';
@@ -41,9 +42,7 @@ class ScreenAccount extends StatelessWidget {
             alignment: Alignment.topCenter,
             child: ProfileCardWidget(screenWidth: screenWidth),
           ),
-          SizedBox(
-            height: 22,
-          ),
+          height22,
           //Personal details-----
           ProfileItemsWidget(
             text: "Personal Details",
@@ -52,9 +51,7 @@ class ScreenAccount extends StatelessWidget {
             onTap: () => Get.to(() => ScreenPersonalDetails(),
                 transition: Transition.cupertino,duration: Duration(milliseconds: 800)),
           ),
-          SizedBox(
-            height: 22,
-          ),
+          height22,
           //About--------------------
           ProfileItemsWidget(
             text: "About",
@@ -65,35 +62,9 @@ class ScreenAccount extends StatelessWidget {
             height: 22,
           ),
           // Long out----------
-          ProfileItemsWidget(
-            text: "Long out",
-            icon: Icons.exit_to_app,
-            screenWidth: screenWidth,
-            onTap: () {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialogWidget(
-                      title: "Logout",
-                      content: "Are you sure you want to logout?",
-                      cancelOnTap: () {
-                        Get.back();
-                      },
-                      okOnTap: () async{
-                        loadingWidget(context);
-                        AuthService().signOut();
-                        await Future.delayed(Duration(seconds: 1));
-                        Get.offAll(() => ScreenWelcome(),
-                            transition: Transition.cupertino);
-                      },
-                    );
-                  });
-            },
-          ),
+          LogOutWidget(screenWidth: screenWidth),
         ],
       ),
     );
   }
 }
-
-

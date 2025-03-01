@@ -13,7 +13,7 @@ class TurfModel {
   final String reviewStatus;
   List<dynamic>images;
   final String ownerId;
-  final String turfId;
+   String turfId;
   final String latitude;
   final String longitude;
   TurfModel({

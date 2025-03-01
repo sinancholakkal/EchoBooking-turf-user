@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:echo_booking/core/constent/image/image_constand.dart';
 import 'package:echo_booking/core/constent/size/size.dart';
 import 'package:echo_booking/core/constent/text/text_constend.dart';

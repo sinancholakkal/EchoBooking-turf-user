@@ -3,22 +3,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CircularWidget extends StatelessWidget {
-  const CircularWidget({super.key});
+  final double top;
+  const CircularWidget({super.key,this.top = 300});
 
   @override
   Widget build(BuildContext context) {
     return Center(
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 380,
-                      ),
-                      CircularProgressIndicator(
-                        color: kWhite,
-                        strokeWidth: 1.5,
-                      ),
-                    ],
-                  ),
-                );
+      child: Column(
+        children: [
+          SizedBox(
+            height: top,
+          ),
+          CircularProgressIndicator(
+            color: kWhite,
+            strokeWidth: 1.5,
+          ),
+        ],
+      ),
+    );
   }
 }

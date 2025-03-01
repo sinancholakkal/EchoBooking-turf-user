@@ -24,8 +24,9 @@ Future<Map<String, List<Map<String, dynamic>>>> fetchingTimeSlots(
     int currentDate = DateTime.now().day;
     int month = int.parse(dateKey.split("-")[1]);
       int todayMonth = DateTime.now().month;
-    if (date >= currentDate || month>=todayMonth) {
-      if (!timeSlotsMap.containsKey(dateKey)) {
+    if (date >= currentDate ) {
+      if(month>=todayMonth){
+        if (!timeSlotsMap.containsKey(dateKey)) {
         timeSlotsMap[dateKey] = [];
       }
 
@@ -52,6 +53,10 @@ Future<Map<String, List<Map<String, dynamic>>>> fetchingTimeSlots(
         }
       } else {
         timeSlotsMap[dateKey]?.add(timeData);
+      }
+      }else{
+        await snapshotRef.doc(dateKey).delete();
+      log("$date deleted----------");
       }
     } else {
       await snapshotRef.doc(dateKey).delete();

@@ -6,7 +6,7 @@ import 'package:echo_booking/core/constent/text/text_constend.dart';
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/feature/presentation/bloc/auth_bloc/auth_bloc_bloc.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/home_screen.dart';
-import 'package:echo_booking/feature/presentation/pages/screen_details/screen_user_details.dart';
+import 'package:echo_booking/feature/presentation/pages/screen_details_enter/screen_user_details.dart';
 import 'package:echo_booking/feature/presentation/pages/sign_up/screen_sign_up.dart';
 import 'package:echo_booking/feature/presentation/widgets/custom_button.dart';
 import 'package:echo_booking/feature/presentation/widgets/heading_text.dart';

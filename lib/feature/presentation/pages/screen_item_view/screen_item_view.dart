@@ -1,42 +1,22 @@
 import 'dart:developer';
-import 'dart:io';
-
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:chips_choice/chips_choice.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echo_booking/core/constent/size/size.dart';
 import 'package:echo_booking/core/theme/colors.dart';
-import 'package:echo_booking/domain/model/turf_model.dart';
-import 'package:echo_booking/domain/repository/auth_service.dart';
-import 'package:echo_booking/domain/repository/star_rating_service.dart';
-import 'package:echo_booking/feature/data/repository/call_launcher.dart';
+import 'package:echo_booking/feature/data/get_star_id.dart';
 import 'package:echo_booking/feature/data/repository/fetch_time_slotes.dart';
-import 'package:echo_booking/feature/data/repository/whatsapp_launcher.dart';
 import 'package:echo_booking/feature/presentation/bloc/item_view/item_view_bloc.dart';
 import 'package:echo_booking/feature/presentation/bloc/star_rating_bloc/star_rating_bloc.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/card_turf_widget.dart';
-import 'package:echo_booking/feature/presentation/pages/screen_booking/screen_booking.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/carousel_dobts_builder.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/carousel_slider_builder_widget.dart';
-import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/date_display_builder_widget.dart';
-import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/expandeble_floating_widget.dart';
-import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/includes_builder_widget.dart';
-import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/star_animation.dart';
-import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/view_all_button.dart';
-import 'package:echo_booking/feature/presentation/pages/screen_view_all_reviews/screen_view_all_reviews.dart';
-import 'package:echo_booking/feature/presentation/widgets/animated_star_rating.dart';
+import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/floating_actions.dart';
+import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/loc_and_book_button_widget.dart';
+import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/rating_field_part_widget.dart';
+import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/time_slot_part_widget.dart';
+import 'package:echo_booking/feature/presentation/pages/screen_item_view/widgets/turf_details_part_widget.dart';
 import 'package:echo_booking/feature/presentation/widgets/circular_widget.dart';
-import 'package:echo_booking/feature/presentation/widgets/custom_button.dart';
-import 'package:echo_booking/feature/presentation/widgets/divider_widget.dart';
-import 'package:echo_booking/feature/presentation/widgets/flutter_toast.dart';
-import 'package:echo_booking/feature/presentation/widgets/rating_list_tile.dart';
 import 'package:echo_booking/feature/presentation/widgets/text_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as bloc;
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
-import 'package:get/get.dart';
-
 class ScreenItemView extends StatefulWidget {
   String tag;
   final dynamic turfmodel;
@@ -50,23 +30,11 @@ class ScreenItemView extends StatefulWidget {
   @override
   State<ScreenItemView> createState() => _ScreenItemViewState();
 }
-
 class _ScreenItemViewState extends State<ScreenItemView> {
   int currentDobt = 0;
   ValueNotifier<int> selectedDateIndex = ValueNotifier(0);
   ValueNotifier<int?> selectedTimeSlotIndex = ValueNotifier<int?>(null);
   List<Map<String, dynamic>> slots = [];
-
-  Future<bool> getStarIds() async {
-    final resu = await FirebaseFirestore.instance
-        .collection("userApp")
-        .doc(AuthService().getCurrentUser()!.uid)
-        .collection("star")
-        .get();
-    final docs = resu.docs;
-    return docs.any((doc) => doc.id == widget.turfmodel.turfId);
-  }
-
   @override
   void initState() {
     context.read<StarRatingBloc>().add(FetchAllReviewsEvent(
@@ -74,11 +42,9 @@ class _ScreenItemViewState extends State<ScreenItemView> {
     context.read<ItemViewBloc>().add(CarouselDoubt(currentDobt: 0));
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: backGroundColor,
@@ -99,20 +65,13 @@ class _ScreenItemViewState extends State<ScreenItemView> {
               ),
               //carousal dobts.............
               CarouselDobtsBuilderWidget(widget: widget),
-
               FutureBuilder(
-                future: getStarIds(),
+                future: getStarIds(widget.turfmodel.turfId),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 200,
-                          ),
-                          CircularProgressIndicator(),
-                        ],
-                      ),
+                    //Loading-----
+                    return CircularWidget(
+                      top: 200,
                     );
                   } else if (snapshot.connectionState == ConnectionState.done) {
                     bool? isFav = snapshot.data;
@@ -123,15 +82,9 @@ class _ScreenItemViewState extends State<ScreenItemView> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return Center(
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    height: 200,
-                                  ),
-                                  CircularProgressIndicator(),
-                                ],
-                              ),
+                            //Loading-------
+                            return CircularWidget(
+                              top: 200,
                             );
                           } else if (snapshot.connectionState ==
                               ConnectionState.done) {
@@ -143,76 +96,11 @@ class _ScreenItemViewState extends State<ScreenItemView> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextWidget(
-                                          text: widget.turfmodel.turfName,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        SizedBox(
-                                          height: 65,
-                                          width: 65,
-                                          child: StarAnimation(
-                                            timeSlots: timeSlots,
-                                            turfModel: widget.turfmodel,
-                                            isFav: isFav!,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  //Ladmark displaying-----------------
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: Align(
-                                      alignment: Alignment.topLeft,
-                                      child: TextWidget(
-                                        text: (!widget.turfmodel.landmark
-                                                .endsWith("kerala")
-                                            ? "${widget.turfmodel.landmark}, ${widget.turfmodel.state}"
-                                            : widget.turfmodel.landmark),
-                                        size: 17,
-                                        maxLine: 3,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ),
-                                  height10,
-                                  height10,
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      child: TextWidget(
-                                        text: "₹${widget.turfmodel.price}",
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  height10,
-                                  //includes display part==================
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      child: TextWidget(
-                                        text: "Includes",
-                                        size: 18,
-                                        color: Colors.white70,
-                                      ),
-                                    ),
-                                  ),
-                                  IncludesBuilderWidget(widget: widget),
-
-                                  height10,
+                                  //Turf details part widget(name,landmark,price and includes)------------------
+                                  TurfDetailsPartWidget(
+                                      widget: widget,
+                                      timeSlots: timeSlots,
+                                      isFav: isFav),
                                   //Booking date displaying-------------------------
                                   timeSlots.isEmpty
                                       ? Center(
@@ -220,242 +108,18 @@ class _ScreenItemViewState extends State<ScreenItemView> {
                                               text:
                                                   "No time slotes available now!"),
                                         )
-                                      : Column(
-                                          children: [
-                                            // Date Selector
-
-                                            DateDisplayBuilderWidget(
-                                                selectedTimeIndex:
-                                                    selectedTimeSlotIndex,
-                                                dateKeys: dateKeys,
-                                                selectedDateIndex:
-                                                    selectedDateIndex),
-
-                                            // Display time slotes-------------------------
-                                            ValueListenableBuilder(
-                                              valueListenable:
-                                                  selectedDateIndex,
-                                              builder:
-                                                  (context, selectDate, child) {
-                                                slots = timeSlots[
-                                                        dateKeys[selectDate]] ??
-                                                    [];
-                                                return Align(
-                                                  alignment: Alignment.topLeft,
-                                                  child: ValueListenableBuilder(
-                                                    valueListenable:
-                                                        selectedTimeSlotIndex,
-                                                    builder: (context,
-                                                        selectTime, child) {
-                                                      if (slots.isEmpty) {
-                                                        return Center(
-                                                          child: TextWidget(
-                                                              text:
-                                                                  "No time slotes available now!"),
-                                                        );
-                                                      } else {
-                                                        return Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  left: 20),
-                                                          child: Wrap(
-                                                              spacing: 10,
-                                                              children:
-                                                                  List.generate(
-                                                                      slots
-                                                                          .length,
-                                                                      (index) {
-                                                                return ChoiceChip(
-                                                                    checkmarkColor:
-                                                                        kWhite,
-                                                                    selectedColor:
-                                                                        Colors.grey[
-                                                                            850],
-                                                                    labelStyle: TextStyle(
-                                                                        color: slots[index]['isAvailable'] == false
-                                                                            ? const Color.fromARGB(
-                                                                                83,
-                                                                                158,
-                                                                                158,
-                                                                                158)
-                                                                            : kWhite),
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .black,
-                                                                    shape: RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
-                                                                                10),
-                                                                        side: BorderSide(
-                                                                            color: slots[index]['isAvailable'] == false
-                                                                                ? const Color.fromARGB(83, 158, 158, 158)
-                                                                                : kWhite)),
-                                                                    label: Text(slots[index]['time']),
-                                                                    selected: selectTime == index,
-                                                                    onSelected: slots[index]['isAvailable'] == true
-                                                                        ? (value) {
-                                                                            selectedTimeSlotIndex.value = value
-                                                                                ? index
-                                                                                : null;
-                                                                          }
-                                                                        : (value) {});
-                                                              })),
-                                                        );
-                                                      }
-                                                    },
-                                                  ),
-                                                );
-                                              },
-                                            )
-                                          ],
+                                      : DateAndTimeSlotWidget(
+                                          dateKeys: dateKeys,
+                                          selectedDateIndex: selectedDateIndex,
+                                          selectedTimeSlotIndex:
+                                              selectedTimeSlotIndex,
+                                          timeSlots: timeSlots,
                                         ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  //Rating field---------
-                                  Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Align(
-                                      alignment: Alignment.topLeft,
-                                      child: TextWidget(
-                                        text: "Rating & Reviews",
-                                      ),
-                                    ),
-                                  ),
 
-                                  bloc.BlocBuilder<StarRatingBloc,
-                                      StarRatingState>(
-                                    builder: (context, state) {
-                                      if (state
-                                          is FetchAllReviewsLoadingState) {
-                                        return CircularWidget();
-                                      } else if (state
-                                          is FetchAllReviewsLoadedState) {
-                                        if (state.reviews.isEmpty) {
-                                          return TextWidget(
-                                            text: "Not posted",
-                                            
-                                          );
-                                        } else {
-                                          double r = (double.parse(
-                                                  state.reviews['rating']) /
-                                              int.parse(state
-                                                  .reviews['reviewcount']));
-                                          List<dynamic> reviews =
-                                              state.reviews['reviews'];
-                                          return SizedBox(
-                                            child: Column(
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 10),
-                                                  child: Align(
-                                                    alignment:
-                                                        Alignment.topLeft,
-                                                    child:
-                                                        AnimatedStarRatingWidget(
-                                                      onChanged: (val) {},
-                                                      initial: r,
-                                                      readOnly: true,
-                                                    ),
-                                                  ),
-                                                ),
-                                                ListView.separated(
-                                                  shrinkWrap: true,
-                                                  physics:
-                                                      NeverScrollableScrollPhysics(),
-                                                  itemCount:
-                                                      (reviews.length > 4)
-                                                          ? 5
-                                                          : reviews.length,
-                                                  separatorBuilder:
-                                                      (context, index) {
-                                                    return DividerWidget();
-                                                  },
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    if (index == 4) {
-                                                      return //View All feedback---------------
-                                                          ReviewAllButtonWidget(
-                                                              onTap: () => Get.to(()=>ScreenViewAllReviews(reviews: reviews),transition: Transition.cupertino),);
-                                                    } else {
-                                                      //List tile of display the review----
-                                                      Map<String, dynamic>
-                                                          data = reviews[index];
-                                                      return RatingListTileWidget(
-                                                          data: data);
-                                                    }
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }
-                                      } else {
-                                        return SizedBox();
-                                      }
-                                    },
-                                  ),
-
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  //Location button-------------------
-                                  Align(
-                                      alignment: Alignment.bottomCenter,
-                                      child: CustomButton(
-                                        onTap: () {
-                                          context.read<ItemViewBloc>().add(
-                                              GoogleMapLauncherEvent(
-                                                  position:
-                                                      "${widget.turfmodel.latitude},${widget.turfmodel.longitude}"));
-                                        },
-                                        text: "Location",
-                                        color: kblue,
-                                        height: 55,
-                                        radius: cardRadius,
-                                        width: screenWidth * 0.9,
-                                        textStyle: TextStyle(
-                                            color: kWhite,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      )),
-                                  height10,
-                                  //Booking button--------------
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: CustomButton(
-                                      onTap: () {
-                                        if (selectedTimeSlotIndex.value ==
-                                            null) {
-                                          flutterToast(
-                                              msg: "Select Time", color: kGrey);
-                                        } else {
-                                          Get.to(
-                                              () => ScreenBooking(
-                                                    turfModel: widget.turfmodel,
-                                                    time: slots[
-                                                        selectedTimeSlotIndex
-                                                            .value!]['time'],
-                                                    dateKey: dateKeys[
-                                                        selectedDateIndex
-                                                            .value],
-                                                  ),
-                                              transition: Transition.cupertino);
-                                        }
-                                      },
-                                      text: "Book Now",
-                                      color: kblue,
-                                      height: 55,
-                                      radius: cardRadius,
-                                      width: screenWidth * 0.9,
-                                      textStyle: TextStyle(
-                                          color: kWhite,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  )
+                                  //Rating part field---------
+                                  RatingFieldPartWidget(),
+                                  //Location and Book now button------------------
+                                  LocAndBookButtonWidget(widget: widget, screenWidth: screenWidth, selectedTimeSlotIndex: selectedTimeSlotIndex, dateKeys: dateKeys, selectedDateIndex: selectedDateIndex)
                                 ],
                               ),
                             );
@@ -474,18 +138,8 @@ class _ScreenItemViewState extends State<ScreenItemView> {
       ),
       //floating action button
       floatingActionButtonLocation: ExpandableFab.location,
-      floatingActionButton: ExpandebleFloatingWidget(
-          //call launcher
-          callOntap: () => context
-              .read<ItemViewBloc>()
-              .add(CallLauncherEvent(phone: widget.turfmodel.phone)),
-          //whatsApp launcher
-          whatsappOnTap: () => context
-              .read<ItemViewBloc>()
-              .add(WhatsAppLauncher(phone: widget.turfmodel.phone))),
+      floatingActionButton: FloatingActionsWidget(widget: widget),
     );
   }
 }
-
-
 
