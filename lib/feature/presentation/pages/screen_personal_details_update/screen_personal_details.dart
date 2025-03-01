@@ -1,22 +1,14 @@
 import 'dart:developer';
-
 import 'package:echo_booking/core/constent/image/image_constand.dart';
-import 'package:echo_booking/core/constent/size/size.dart';
-import 'package:echo_booking/core/constent/text/text_constend.dart';
 import 'package:echo_booking/core/theme/colors.dart';
-import 'package:echo_booking/core/until/validation.dart';
-import 'package:echo_booking/domain/model/user_model.dart';
-import 'package:echo_booking/domain/repository/user_service.dart';
 import 'package:echo_booking/feature/presentation/bloc/user/user_bloc.dart';
-import 'package:echo_booking/feature/presentation/pages/screen_personal_details/widgets/avatar_widget.dart';
-import 'package:echo_booking/feature/presentation/pages/screen_personal_details/widgets/profile_text_form_widget.dart';
+import 'package:echo_booking/feature/presentation/pages/screen_personal_details_update/widgets/avatar_widget.dart';
+import 'package:echo_booking/feature/presentation/pages/screen_personal_details_update/widgets/text_fields_and_save_button_widget.dart';
 import 'package:echo_booking/feature/presentation/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
-
 class ScreenPersonalDetails extends StatefulWidget {
-  ScreenPersonalDetails({super.key});
+  const ScreenPersonalDetails({super.key});
 
   @override
   State<ScreenPersonalDetails> createState() => _ScreenPersonalDetailsState();
@@ -38,7 +30,6 @@ class _ScreenPersonalDetailsState extends State<ScreenPersonalDetails> {
     _scrollController = FixedExtentScrollController();
     super.initState();
   }
-
   @override
   void dispose() {
     _name.dispose();
@@ -47,7 +38,6 @@ class _ScreenPersonalDetailsState extends State<ScreenPersonalDetails> {
     _scrollController.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<UserBloc, UserState>(
@@ -59,7 +49,6 @@ class _ScreenPersonalDetailsState extends State<ScreenPersonalDetails> {
           Navigator.pop(context);
           log("Updated");
         }
-      
       },
       child: Scaffold(
         backgroundColor: backGroundColor,
@@ -104,54 +93,8 @@ class _ScreenPersonalDetailsState extends State<ScreenPersonalDetails> {
                           ),
                         ),
                       ),
-                      //name form--------------
-                      ProfileTextFormField(
-                        labelText: fullNameText,
-                        controller: _name,
-                        validation: (value) {
-                          return Validation.nameValidate(value: _name.text);
-                        },
-                      ),
-                      height10,
-                      //address form-----------------
-                      ProfileTextFormField(
-                        labelText: addressText,
-                        controller: _address,
-                        validation: (value) {
-                          return Validation.addressValidate(
-                              value: _address.text);
-                        },
-                      ),
-                      height10,
-                      //phone form----------------
-                      ProfileTextFormField(
-                        labelText: phoneText,
-                        controller: _phone,
-                        validation: (value) {
-                          return Validation.phoneNumberValidate(
-                              value: _phone.text);
-                        },
-                      ),
-                      //submit button---------------
-                      ElevatedButton(
-                          onPressed: () {
-                            log("$gender================");
-                            if (_formKey.currentState!.validate()) {
-                              print(" Validated--------------------");
-                              UserModel userModel = UserModel(
-                                name: _name.text,
-                                phone: _phone.text,
-                                address: _address.text,
-                                uid: data.uid,
-                                gender: gender!,
-                              );
-                              context.read<UserBloc>().add(
-                                  UserDataUpdateEvent(userModel: userModel));
-                            } else {
-                              print("Not Validated--------------------");
-                            }
-                          },
-                          child: Text("Update"))
+                      //Fields and update button----------
+                      TextFieldsAndSaveButtonWidget(name: _name, address: _address, phone: _phone, gender: gender, formKey: _formKey, data: data)
                     ],
                   ),
                 );

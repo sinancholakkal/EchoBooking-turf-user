@@ -38,6 +38,7 @@ class TextFormFieldesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           //Full name----------------
           SizedBox(

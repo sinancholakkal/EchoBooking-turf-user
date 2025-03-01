@@ -5,7 +5,7 @@ import 'package:echo_booking/feature/presentation/bloc/user/user_bloc.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_account/widget/log_out_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_account/widget/profile_card_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_account/widget/profile_items_widget.dart';
-import 'package:echo_booking/feature/presentation/pages/screen_personal_details/screen_personal_details.dart';
+import 'package:echo_booking/feature/presentation/pages/screen_personal_details_update/screen_personal_details.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_welcome/screen_welcome.dart';
 import 'package:echo_booking/feature/presentation/widgets/alert_dialog_widget.dart';
 import 'package:echo_booking/feature/presentation/widgets/loading_widget.dart';
