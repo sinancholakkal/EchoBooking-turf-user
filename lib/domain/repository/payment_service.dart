@@ -11,6 +11,11 @@ class PaymentService {
     required String datekey,
     required String bookedTime,
   }) async {
+    log("time slot disable called");
+    log(turfmodel.ownerId);
+    log(turfmodel.turfId);
+    log("eeeeeeeeeeeeeeeee");
+    log(datekey);
     try {
       final docRef = FirebaseFirestore.instance
           .collection("owner")
@@ -22,12 +27,14 @@ class PaymentService {
 
       final snapshot = await docRef.get();
 
-      if (!snapshot.exists) {
-        log("Document does not exist.");
-        return;
-      }
+      // if (!snapshot.exists) {
+      //   log("Document does not exist.");
+      //   return;
+      // }
 
       Map<String, dynamic>? timeSlotData = snapshot.data();
+      log(timeSlotData.toString());
+      log("=================");
 
       if (timeSlotData == null || !timeSlotData.containsKey("time_slot")) {
         log("No valid time_slot found.");
@@ -47,6 +54,7 @@ class PaymentService {
         if (time is Map<String, dynamic> && time["time"] == bookedTime) {
           log("Time availability updated.");
           time["isAvailable"] = false;
+          log("Disabled----");
           updated = true;
           break;
         }
@@ -62,9 +70,16 @@ class PaymentService {
     }
   }
 
-  Future<void>addBookingTurf({required TurfModel turfModel,required String date,required String time,required String paymentId,required String userName})async{
+  Future<void> addBookingTurf({
+    required TurfModel turfModel,
+    required String date,
+    required String time,
+    required String paymentId,
+    required String userName,
+    required String price,
+  }) async {
     log("Add bookings called");
-    final User? user= AuthService().getCurrentUser();
+    final User? user = AuthService().getCurrentUser();
     await FirebaseFirestore.instance
         .collection("userApp")
         .doc(user!.uid)
@@ -74,7 +89,7 @@ class PaymentService {
       "turfname": turfModel.turfName,
       "phone": turfModel.phone,
       "email": turfModel.email,
-      "price": turfModel.price,
+      "price": price,
       "state": turfModel.state,
       "country": turfModel.country,
       "latitude": turfModel.latitude,
@@ -85,15 +100,25 @@ class PaymentService {
       "images": turfModel.images,
       "turfid": turfModel.turfId,
       "reviewStatus": turfModel.reviewStatus,
-      'bookingtime':time,
-      'bookingdate':date,
-      'paymentid':paymentId,
-      'ownerid':turfModel.ownerId,
-      'username':userName
+      'bookingtime': time,
+      'slotdate': date,
+      'paymentid': paymentId,
+      'ownerid': turfModel.ownerId,
+      'username': userName,
+      'bookingdate':
+          "${DateTime.now().day.toString().padLeft(2, '0')}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().year}",
     });
-  log("Booking added===================");
+    log("Booking added===================");
   }
-  Future<void>updateInOwner({required TurfModel turfModel,required String date,required String time,required String paymentId,required UserModel userModel})async{
+
+  Future<void> updateInOwner({
+    required TurfModel turfModel,
+    required String date,
+    required String time,
+    required String paymentId,
+    required UserModel userModel,
+    required String price,
+  }) async {
     log("owner update called");
     await FirebaseFirestore.instance
         .collection("owner")
@@ -102,17 +127,17 @@ class PaymentService {
         .doc(turfModel.turfId)
         .set({
       "turfname": turfModel.turfName,
-      "price": turfModel.price,
+      "price": price,
       "catogery": turfModel.catogery,
       "turfid": turfModel.turfId,
       "reviewStatus": turfModel.reviewStatus,
-      'bookingtime':time,
-      'bookingdate':date,
-      'paymentid':paymentId,
-      'username':userModel.name,
-      'userphone':userModel.phone,
-      
-      
+      'bookingtime': time,
+      'slotdate': date,
+      'paymentid': paymentId,
+      'username': userModel.name,
+      'userphone': userModel.phone,
+      'bookingdate':
+          "${DateTime.now().day.toString().padLeft(2, '0')}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().year}",
     });
     log("Owner updated====");
   }

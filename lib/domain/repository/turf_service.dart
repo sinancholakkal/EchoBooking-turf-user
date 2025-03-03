@@ -156,7 +156,7 @@ class TurfService {
     for (var turfData in snapshot.docs) {
       final turf = turfData.data();
       String dateAndTime =
-          "${turf['bookingdate']} ${turf['bookingtime'].toString().split(" ")[2]}";
+          "${turf['slotdate']} ${turf['bookingtime'].toString().split(" ")[2]}";
       DateTime givenTime = DateTime.parse(dateAndTime);
       DateTime currentTime = DateTime.now();
       String status = "";
@@ -174,7 +174,7 @@ class TurfService {
         userName: turf['username'],
         price: turf['price'],
         review: turf['review'],
-          bookingDate: turf['bookingdate'],
+          bookingDate: turf['slotdate'],
           bookingTime: turf['bookingtime'],
           catogery: turf['catogery'],
           images: turf['images'],

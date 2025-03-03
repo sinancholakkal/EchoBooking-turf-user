@@ -4,7 +4,7 @@ class TurfModel {
   final String turfName;
   final String phone;
   final String email;
-   String price;
+  final String price;
   final String state;
   final String country;
   final String catogery;
@@ -13,7 +13,7 @@ class TurfModel {
   final String reviewStatus;
   List<dynamic>images;
   final String ownerId;
-   String turfId;
+  final String turfId;
   final String latitude;
   final String longitude;
   TurfModel({

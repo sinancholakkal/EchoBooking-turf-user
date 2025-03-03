@@ -17,7 +17,7 @@ import 'package:get/get.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class ScreenBooking extends StatefulWidget {
-   TurfModel turfModel;
+  TurfModel turfModel;
   final String time;
   final String dateKey;
   ScreenBooking(
@@ -39,14 +39,16 @@ class _ScreenBookingState extends State<ScreenBooking> {
     paymentId = response.paymentId;
     context.read<UserBloc>().add(UserDataFetchingEvent());
   }
- 
+
   late List<Map<String, String>> details;
   @override
   void initState() {
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, screenBookingData.handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, screenBookingData.handleExternalWallet);
+    _razorpay.on(
+        Razorpay.EVENT_PAYMENT_ERROR, screenBookingData.handlePaymentError);
+    _razorpay.on(
+        Razorpay.EVENT_EXTERNAL_WALLET, screenBookingData.handleExternalWallet);
     int price = int.parse(widget.turfModel.price);
     taxesAndFee = price * (18 / 100);
     details = ScreenBookingData.getDetailsScreenBooking(
@@ -55,11 +57,13 @@ class _ScreenBookingState extends State<ScreenBooking> {
         time: widget.time);
     super.initState();
   }
+
   @override
   void dispose() {
     _razorpay.clear();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -80,15 +84,16 @@ class _ScreenBookingState extends State<ScreenBooking> {
         BlocListener<UserBloc, UserState>(
           listener: (context, state) {
             if (state is UserLoadedState) {
-              widget.turfModel.turfId = ScreenBookingData.getRandomId();
-              widget.turfModel.price =
-                  "${taxesAndFee + int.parse(widget.turfModel.price)}";
+             
               context.read<PaymentBloc>().add(PaymentSuccessEvent(
-                  userModel: state.user!,
-                  turfModel: widget.turfModel,
-                  paymentId: paymentId!,
-                  dateKey: widget.dateKey,
-                  bookedTime: widget.time));
+                    userModel: state.user!,
+                    turfModel: widget.turfModel,
+                    paymentId: paymentId!,
+                    dateKey: widget.dateKey,
+                    bookedTime: widget.time,
+                    bookingId: ScreenBookingData.getRandomId(),
+                    price: "${taxesAndFee + int.parse(widget.turfModel.price)}",
+                  ));
             }
           },
         ),
@@ -125,7 +130,11 @@ class _ScreenBookingState extends State<ScreenBooking> {
                   height: screenHeight * 0.06,
                 ),
                 //Payment Button----------------
-                PaymentButtonWidget(taxesAndFee: taxesAndFee, widget: widget, razorpay: _razorpay, screenWidth: screenWidth)
+                PaymentButtonWidget(
+                    taxesAndFee: taxesAndFee,
+                    widget: widget,
+                    razorpay: _razorpay,
+                    screenWidth: screenWidth)
               ],
             ),
           ),
@@ -133,5 +142,4 @@ class _ScreenBookingState extends State<ScreenBooking> {
       ),
     );
   }
-
 }

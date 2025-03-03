@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ScreenForgot extends StatefulWidget {
-   ScreenForgot({super.key});
+  ScreenForgot({super.key});
 
   @override
   State<ScreenForgot> createState() => _ScreenForgotState();
@@ -24,6 +24,7 @@ class _ScreenForgotState extends State<ScreenForgot> {
     _email = TextEditingController();
     super.initState();
   }
+
   @override
   void dispose() {
     _email.dispose();
@@ -58,7 +59,7 @@ class _ScreenForgotState extends State<ScreenForgot> {
               key: _formKey,
               child: TextFormFieldWidget(
                 controller: _email,
-                validator: (value){
+                validator: (value) {
                   return Validation.emailValidation(value);
                 },
               ),
@@ -67,14 +68,17 @@ class _ScreenForgotState extends State<ScreenForgot> {
               height: 20,
             ),
             Center(
-                child: ElevatedButton(onPressed: () {
-                   if (_formKey.currentState!.validate()) {
-                          print(" Validated--------------------");
-                          context.read<AuthBlocBloc>().add(ForgotpasswordEvent(email: _email.text.trim()));
-                        } else {
-                          print("Not Validated--------------------");
-                        }
-                }, child: Text("Reset")))
+                child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        print(" Validated--------------------");
+                        context.read<AuthBlocBloc>().add(
+                            ForgotpasswordEvent(email: _email.text.trim()));
+                      } else {
+                        print("Not Validated--------------------");
+                      }
+                    },
+                    child: Text("Reset")))
           ],
         ),
       )),
