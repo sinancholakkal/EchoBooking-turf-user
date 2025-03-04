@@ -8,7 +8,8 @@ class PostStarRatingEvent extends StarRatingEvent{
   final String command;
   final String ownerId;
   final String turfId;
-  PostStarRatingEvent({required this.userName, required this.rating,required this.command,required this.ownerId,required this.turfId});
+  final String bookingId;
+  PostStarRatingEvent({required this.userName, required this.rating,required this.command,required this.ownerId,required this.turfId,required this.bookingId});
 }
 class FetchReviewEvent extends StarRatingEvent{
    final String turfId;

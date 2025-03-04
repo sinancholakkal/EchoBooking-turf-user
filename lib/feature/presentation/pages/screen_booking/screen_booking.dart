@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/domain/model/turf_model.dart';
 import 'package:echo_booking/feature/presentation/bloc/payment_screen_bloc/payment_bloc.dart';
@@ -17,7 +19,7 @@ import 'package:get/get.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class ScreenBooking extends StatefulWidget {
-  TurfModel turfModel;
+  final TurfModel turfModel;
   final String time;
   final String dateKey;
   ScreenBooking(
@@ -25,11 +27,9 @@ class ScreenBooking extends StatefulWidget {
       required this.turfModel,
       required this.time,
       required this.dateKey});
-
   @override
   State<ScreenBooking> createState() => _ScreenBookingState();
 }
-
 class _ScreenBookingState extends State<ScreenBooking> {
   late num taxesAndFee;
   late Razorpay _razorpay;
@@ -39,10 +39,10 @@ class _ScreenBookingState extends State<ScreenBooking> {
     paymentId = response.paymentId;
     context.read<UserBloc>().add(UserDataFetchingEvent());
   }
-
   late List<Map<String, String>> details;
   @override
   void initState() {
+    log(widget.turfModel.turfId);
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
     _razorpay.on(
@@ -84,7 +84,8 @@ class _ScreenBookingState extends State<ScreenBooking> {
         BlocListener<UserBloc, UserState>(
           listener: (context, state) {
             if (state is UserLoadedState) {
-             
+              log("calling payment success event");
+              log(widget.turfModel.turfId);
               context.read<PaymentBloc>().add(PaymentSuccessEvent(
                     userModel: state.user!,
                     turfModel: widget.turfModel,
@@ -109,9 +110,7 @@ class _ScreenBookingState extends State<ScreenBooking> {
         body: Container(
           height: double.infinity,
           width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: backGroundGradient,
-          ),
+          color: backGroundColor,
           child: SafeArea(
             child: Column(
               children: [

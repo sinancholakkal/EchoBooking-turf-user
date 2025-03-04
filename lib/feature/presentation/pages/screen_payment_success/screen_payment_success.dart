@@ -29,9 +29,7 @@ Future<void>splashTime()async{
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
-          gradient: backGroundGradient
-        ),
+        color: backGroundColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

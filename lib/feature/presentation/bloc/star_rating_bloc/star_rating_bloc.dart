@@ -18,7 +18,8 @@ class StarRatingBloc extends Bloc<StarRatingEvent, StarRatingState> {
     on<PostStarRatingEvent>((event, emit)async {
       emit(PostLoadingState());
       try{
-        await StarRatingService().postStarRating(rating: event.rating, command: event.command, ownerId: event.ownerId, turfId: event.turfId, userName: event.userName);
+        log("Rating event called");
+        await StarRatingService().postStarRating(rating: event.rating, command: event.command, ownerId: event.ownerId, turfId: event.turfId, userName: event.userName,bookingId: event.bookingId);
         emit(PostLoadedState());
       }catch(e){
         log("Somthing happen while posting rating");

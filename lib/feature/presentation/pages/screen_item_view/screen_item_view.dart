@@ -37,6 +37,8 @@ class _ScreenItemViewState extends State<ScreenItemView> {
   List<Map<String, dynamic>> slots = [];
   @override
   void initState() {
+    log(widget.turfmodel.turfId);
+    log("==========");
     context.read<StarRatingBloc>().add(FetchAllReviewsEvent(
         ownerId: widget.turfmodel.ownerId, turfId: widget.turfmodel.turfId));
     context.read<ItemViewBloc>().add(CarouselDoubt(currentDobt: 0));
@@ -52,7 +54,8 @@ class _ScreenItemViewState extends State<ScreenItemView> {
       ),
       body: Container(
         height: double.infinity,
-        decoration: BoxDecoration(gradient: backGroundGradient),
+        //decoration: BoxDecoration(gradient: backGroundGradient),
+        color: backGroundColor,
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

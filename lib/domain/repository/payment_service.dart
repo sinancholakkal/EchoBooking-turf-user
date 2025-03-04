@@ -77,6 +77,7 @@ class PaymentService {
     required String paymentId,
     required String userName,
     required String price,
+    required String bookingTurfId
   }) async {
     log("Add bookings called");
     final User? user = AuthService().getCurrentUser();
@@ -84,8 +85,9 @@ class PaymentService {
         .collection("userApp")
         .doc(user!.uid)
         .collection("bookings")
-        .doc(turfModel.turfId)
+        .doc(bookingTurfId)
         .set({
+          "bookingid":bookingTurfId,
       "turfname": turfModel.turfName,
       "phone": turfModel.phone,
       "email": turfModel.email,
@@ -118,14 +120,16 @@ class PaymentService {
     required String paymentId,
     required UserModel userModel,
     required String price,
+    required String bookingTurfId
   }) async {
     log("owner update called");
     await FirebaseFirestore.instance
         .collection("owner")
         .doc(turfModel.ownerId)
         .collection("bookings")
-        .doc(turfModel.turfId)
+        .doc(bookingTurfId)
         .set({
+          "bookingId":bookingTurfId,
       "turfname": turfModel.turfName,
       "price": price,
       "catogery": turfModel.catogery,

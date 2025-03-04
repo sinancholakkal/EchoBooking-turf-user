@@ -36,7 +36,7 @@ class StarRatingFieldWidget extends StatelessWidget {
         listener: (context, state) {
           if (state is PostLoadedState) {
             context.read<StarRatingBloc>().add(FetchReviewEvent(
-                turfId: widget.turfmodel.turfId));
+                turfId: widget.turfmodel.bookingId));
           }
         },
         child: BlocBuilder<StarRatingBloc, StarRatingState>(

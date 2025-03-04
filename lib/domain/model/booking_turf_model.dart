@@ -13,8 +13,10 @@ class BookingTurfmodel {
   final String price;
   final String ownerId;
   final String userName;
+  final String bookingId;
   Map<String,dynamic>?review;
   BookingTurfmodel({
+    required this.bookingId,
     required this.price,
     required this.bookingDate,
     required this.landmark,

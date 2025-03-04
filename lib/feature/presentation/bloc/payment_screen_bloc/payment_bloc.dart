@@ -14,9 +14,11 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     on<PaymentSuccessEvent>((event, emit)async {
       emit(PaymentSuccessLoadingState());
       try{
+        log("In bloc ivent");
+        log(event.turfModel.turfId);
         await PaymentService().disableTimeSlot(turfmodel: event.turfModel, datekey: event.dateKey, bookedTime: event.bookedTime,);
-        await PaymentService().addBookingTurf(turfModel: event.turfModel,date: event.dateKey,paymentId: event.paymentId,time: event.bookedTime,userName:event.userModel.name,price: event.price);
-        await PaymentService().updateInOwner(date: event.dateKey,paymentId: event.paymentId, time: event.bookedTime,turfModel: event.turfModel,userModel: event.userModel,price:event.price);
+        await PaymentService().addBookingTurf(turfModel: event.turfModel,date: event.dateKey,paymentId: event.paymentId,time: event.bookedTime,userName:event.userModel.name,price: event.price,bookingTurfId: event.bookingId);
+        await PaymentService().updateInOwner(date: event.dateKey,paymentId: event.paymentId, time: event.bookedTime,turfModel: event.turfModel,userModel: event.userModel,price:event.price,bookingTurfId: event.bookingId);
         emit(PaymentSuccessState());
       }catch (e){
         log("Somthing wrong while update time availablity after booking $e");

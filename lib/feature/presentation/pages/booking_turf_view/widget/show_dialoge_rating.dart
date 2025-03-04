@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:echo_booking/core/constent/size/size.dart';
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/core/until/validation.dart';
@@ -19,6 +21,7 @@ Future<dynamic> showDialogRating({
   return showDialog(
     context: context,
     builder: (context) {
+      log(widget.turfmodel.turfId);
       return AlertDialog(
         backgroundColor: const Color.fromARGB(255, 14, 11, 59),
         title: Column(
@@ -72,6 +75,7 @@ Future<dynamic> showDialogRating({
                   print(" Validated--------------------");
                   Get.back();
                   context.read<StarRatingBloc>().add(PostStarRatingEvent(
+                    bookingId: widget.turfmodel.bookingId,
                         userName: widget.turfmodel.userName,
                         rating: rating.toString(),
                         command: feedbackController.text,

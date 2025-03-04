@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:echo_booking/core/constent/size/size.dart';
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/feature/presentation/bloc/star_rating_bloc/star_rating_bloc.dart';
@@ -26,9 +28,13 @@ class _ScreenBookingTurfViewState extends State<ScreenBookingTurfView> {
   double rating = 1;
   @override
   void initState() {
+    log(widget.turfmodel.turfId);
+    log(widget.turfmodel.bookingId);
+    log("===============");
+    log("===========");
     context
         .read<StarRatingBloc>()
-        .add(FetchReviewEvent(turfId: widget.turfmodel.turfId));
+        .add(FetchReviewEvent(turfId: widget.turfmodel.bookingId));
     _feedbackController = TextEditingController();
     details = getDetails(widget.turfmodel);
     super.initState();
