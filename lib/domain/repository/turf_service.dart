@@ -11,16 +11,22 @@ class TurfService {
   //Fetching turfs for review------------------
   Future<List<List<TurfModel>>> fetchAllTurfs() async {
     log("Fetch all event called========");
+    double max1 = -1, max2 = -1, max3 = -1, max4 = -1;
+    TurfModel? obj1,obj2,obj3,obj4;
     final instance = FirebaseFirestore.instance;
-    List<List<TurfModel>> turfs = [[], []];
+    List<List<TurfModel>> turfs = [
+      [], //Football
+      [], //Cricket
+      [], //popular
+    ];
 
     final ownerSnap = await instance.collection("owner").get();
 
     for (var ownerDoc in ownerSnap.docs) {
       log(ownerDoc.id);
       final ownerData = ownerDoc.data();
-      final turfDocs = await ownerDoc.reference.collection("turfs").get();
-
+      final turfColl = ownerDoc.reference.collection("turfs");
+      final turfDocs = await turfColl.get();
       if (turfDocs.docs.isNotEmpty) {
         for (var turf in turfDocs.docs) {
           final turfData = turf.data();
@@ -51,10 +57,47 @@ class TurfService {
               turfs[1].add(turfModel);
             }
             turfModel.ownerId;
+            final review = await turfColl
+                .doc(turfModel.turfId)
+                .collection('review')
+                .doc(turfModel.turfId)
+                .get();
+            final starCount = review.data()?['starcount'] ?? 0;
+            if (starCount == 0) continue;
+            
+            if (starCount > max1) {
+              max4 = max3;
+              obj4 = obj3;
+              max3 = max2;
+              obj3 = obj2;
+              max2 = max1;
+              obj2 = obj1;
+              max1 = starCount;
+              obj1 = turfModel;
+            } else if (starCount > max2) {
+              max4 = max3;
+              obj4 = obj3;
+              max3 = max2;
+              obj3 = obj2;
+              max2 = starCount;
+              obj2=turfModel;
+            } else if (starCount > max3) {
+              max4 = max3;
+              obj4 = obj3;
+              max3 = starCount;
+              obj3 = turfModel;
+            } else if (starCount > max4) {
+              max4 = starCount;
+              obj4 = turfModel;
+            }
           }
         }
       }
     }
+    if(obj1!=null)turfs[2].add(obj1);
+    if(obj2!=null)turfs[2].add(obj2);
+    if(obj3!=null)turfs[2].add(obj3);
+    if(obj4!=null)turfs[2].add(obj4);
     return turfs;
   }
 
@@ -169,11 +212,11 @@ class TurfService {
       log(givenTime.toString());
       log(status);
       final bookingTurfModel = BookingTurfmodel(
-        bookingId: turf['bookingid']??"booking id null",
-        ownerId: turf['ownerid'],
-        userName: turf['username'],
-        price: turf['price'],
-        review: turf['review'],
+          bookingId: turf['bookingid'] ?? "booking id null",
+          ownerId: turf['ownerid'],
+          userName: turf['username'],
+          price: turf['price'],
+          review: turf['review'],
           bookingDate: turf['slotdate'],
           bookingTime: turf['bookingtime'],
           catogery: turf['catogery'],
@@ -186,7 +229,9 @@ class TurfService {
           landmark: turf['landmark'],
           status: status);
 
-      (status=='Live')?turfs.insert(0, bookingTurfModel):turfs.add(bookingTurfModel);
+      (status == 'Live')
+          ? turfs.insert(0, bookingTurfModel)
+          : turfs.add(bookingTurfModel);
     }
     return turfs;
   }

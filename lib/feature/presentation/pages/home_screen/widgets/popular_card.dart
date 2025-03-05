@@ -69,6 +69,7 @@ class PopularCard extends StatelessWidget {
           ),
           Spacer(),
           Text(
+            overflow: TextOverflow.ellipsis,
             turfModel.turfName,
             style: TextStyle(
                 fontSize: 20, fontWeight: FontWeight.w400, color: Colors.white),
