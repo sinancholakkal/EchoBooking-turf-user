@@ -43,10 +43,11 @@ class RatingFieldPartWidget extends StatelessWidget {
                     text: "Not posted",
                   );
                 } else {
-                  double r = (double.parse(state
-                          .reviews['rating']) /
-                      int.parse(state.reviews[
-                          'reviewcount']));
+                  // double r = (double.parse(state
+                  //         .reviews['starcount']) /
+                  //     int.parse(state.reviews[
+                  //         'reviewcount']));
+                  double r = state.reviews['starcount']/state.reviews['reviewcount'];
                   List<dynamic> reviews =
                       state.reviews['reviews'];
                   return SizedBox(

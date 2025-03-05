@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:echo_booking/domain/repository/auth_service.dart';
 
 class StarRatingService {
-  Future<void> postStarRating({
+Future<void> postStarRating({
   required String rating,
   required String command,
   required String ownerId,
@@ -22,13 +22,13 @@ class StarRatingService {
 
   try {
     DocumentSnapshot snapshot = await snapshotRef.get();
-    if (snapshot.exists) {
+    
+    if (snapshot.exists && snapshot.data() != null) {
+      log("Document exists and has data.");
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
 
-      int reviewCount = (data['reviewcount'] is String) ? int.parse(data['reviewcount']) + 1 : (data['reviewcount'] ?? 0) + 1;
-      double starCount = (data['starcount'] is String) ? double.parse(data['starcount']) : (data['starcount'] ?? 0);
-
-      List<dynamic> reviews = List.from(data['reviews'] ?? []);
+      int reviewCount = (data['reviewcount'] ?? 0) + 1;
+      double starCount = (data['starcount'] ?? 0) + double.parse(rating); // Use double.parse
 
       Map<String, dynamic> newReview = {
         'name': userName,
@@ -36,15 +36,16 @@ class StarRatingService {
         'command': command
       };
 
-      snapshotRef.update({
-        'reviewcount': reviewCount.toString(),
-        'starcount': (double.parse(rating) + starCount).toString(),
+      await snapshotRef.update({
+        'reviewcount': reviewCount,
+        'starcount': starCount, // Store as double
         'reviews': FieldValue.arrayUnion([newReview]),
       });
     } else {
-      snapshotRef.set({
-        "reviewcount": "1",
-        "starcount": rating, // Fix: Correct field name
+      log("Document does not exist or has no data. Creating new document.");
+      await snapshotRef.set({
+        "reviewcount": 1,
+        "starcount": double.parse(rating), // Use double.parse here
         'reviews': [
           {
             "name": userName,
@@ -54,8 +55,7 @@ class StarRatingService {
         ]
       });
     }
-
-    final snapshotRefUser = FirebaseFirestore.instance
+        final snapshotRefUser = FirebaseFirestore.instance
         .collection('userApp')
         .doc(AuthService().getCurrentUser()!.uid)
         .collection('bookings')
@@ -69,10 +69,26 @@ class StarRatingService {
       }
     });
 
+
   } catch (e) {
     log("Something went wrong while posting rating: $e");
   }
 }
+
+
+    // final snapshotRefUser = FirebaseFirestore.instance
+    //     .collection('userApp')
+    //     .doc(AuthService().getCurrentUser()!.uid)
+    //     .collection('bookings')
+    //     .doc(bookingId);
+
+    // await snapshotRefUser.update({
+    //   "review": {
+    //     "name": userName,
+    //     "rating": rating,
+    //     "command": command
+    //   }
+    // });
 
   Future<Map<String,dynamic>>fetchReview({required String turfId})async{
     final snapshotRefUser = await FirebaseFirestore.instance
@@ -85,6 +101,9 @@ class StarRatingService {
   }
 
   Future<Map<String,dynamic>>fetchAllReviews({required String ownerId,required String turfId})async{
+    log("Fecthing alll reviews");
+    log(ownerId);
+    log(turfId);
    final snapshotRef = FirebaseFirestore.instance
     .collection('owner')
     .doc(ownerId)
