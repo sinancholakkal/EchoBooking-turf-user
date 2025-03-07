@@ -1,21 +1,11 @@
-import 'dart:developer';
-import 'package:echo_booking/core/constent/size/size.dart';
-import 'package:echo_booking/core/constent/text/text_constend.dart';
-import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/domain/model/turf_model.dart';
 import 'package:echo_booking/feature/presentation/bloc/turf_bloc/turf_bloc.dart';
-import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/card_heading.dart';
-import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/card_turf_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/football_sction.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/list_of_turf_section.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/popular_card_section.dart';
-import 'package:echo_booking/feature/presentation/pages/screen_item_view/screen_item_view.dart';
 import 'package:echo_booking/feature/presentation/widgets/circular_widget.dart';
-import 'package:echo_booking/feature/presentation/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as bloc;
-import 'package:get/get.dart';
-import '../widgets/popular_card.dart';
 class HomeTab extends StatefulWidget {
   HomeTab({super.key});
   @override

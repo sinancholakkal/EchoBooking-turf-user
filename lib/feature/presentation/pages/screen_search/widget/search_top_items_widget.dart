@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:echo_booking/core/theme/colors.dart';
+import 'package:echo_booking/feature/presentation/bloc/category_bloc/category_bloc.dart';
 import 'package:echo_booking/feature/presentation/bloc/search_bloc/search_bloc.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/search_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_search/widget/filter_bottom_sheet.dart';
@@ -9,20 +10,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
-class SearchTopItemsWidget extends StatelessWidget {
+class SearchTopItemsWidget extends StatefulWidget {
   const SearchTopItemsWidget({
     super.key,
     required TextEditingController searchController,
-    required this.choiceList,
     required RangeValues currentRangeValues,
     required this.selectedChipIndex,
-  }) : _searchController = searchController, _currentRangeValues = currentRangeValues;
+  })  : _searchController = searchController,
+        _currentRangeValues = currentRangeValues;
 
   final TextEditingController _searchController;
-  final List<String> choiceList;
   final RangeValues _currentRangeValues;
   final ValueNotifier<int?> selectedChipIndex;
 
+  @override
+  State<SearchTopItemsWidget> createState() => _SearchTopItemsWidgetState();
+}
+
+class _SearchTopItemsWidgetState extends State<SearchTopItemsWidget> {
+  @override
+  void initState() {
+    context.read<CategoryBloc>().add(FetchCategory());
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -42,21 +52,22 @@ class SearchTopItemsWidget extends StatelessWidget {
           },
           builder: (context, state) {
             if (state is SpeechLoadedState) {
-              _searchController.text = state.text;
+              widget._searchController.text = state.text;
             }
             return Flexible(
                 child: Padding(
               padding: const EdgeInsets.only(top: 8),
               child: SearchWidget(
                 enable: true,
-                controller: _searchController,
+                controller: widget._searchController,
                 onTapMove: false,
                 width: 280,
                 onSubmitted: (value) {
-                  _searchController.text = value;
+                  widget._searchController.text = value;
                   log("On sumbmit called");
-                  context.read<SearchBloc>().add(
-                      SearchQueryEvent(searchQuery: {"search": value}));
+                  context
+                      .read<SearchBloc>()
+                      .add(SearchQueryEvent(searchQuery: {"search": value}));
                 },
               ),
             ));
@@ -65,9 +76,7 @@ class SearchTopItemsWidget extends StatelessWidget {
         //Speech to text button-----------------
         IconButton(
             onPressed: () {
-              context
-                  .read<SearchBloc>()
-                  .add(SpeechToTextStartListerning());
+              context.read<SearchBloc>().add(SpeechToTextStartListerning());
             },
             icon: Icon(
               Icons.mic,
@@ -78,26 +87,34 @@ class SearchTopItemsWidget extends StatelessWidget {
         BlocBuilder<SearchBloc, SearchState>(
           builder: (context, state) {
             if (state is SearchLoadedState) {
-              return IconButton(
-                  onPressed: () {
-                    String? date;
-                    String? time;
-                    //Show  bottom sheet------
-                    filterBottumSheet(
-                      context: context,
-                      date: date,
-                      time: time,
-                      searchController: _searchController,
-                      choiceList: choiceList,
-                      currentRangeValues: _currentRangeValues,
-                      selectedChipIndex: selectedChipIndex,
-                    );
-                  },
-                  icon: Icon(
-                    Icons.filter_alt,
-                    color: kWhite,
-                    size: 30,
-                  ));
+              return BlocBuilder<CategoryBloc, CategoryState>(
+                builder: (context, state) {
+                if(state is CategoryLoadedState){
+                  return IconButton(
+                      onPressed: () {
+                        String? date;
+                        String? time;
+                        //Show  bottom sheet------
+                        filterBottumSheet(
+                          context: context,
+                          date: date,
+                          time: time,
+                          searchController: widget._searchController,
+                          choiceList: state.caregorys,
+                          currentRangeValues: widget._currentRangeValues,
+                          selectedChipIndex: widget.selectedChipIndex,
+                        );
+                      },
+                      icon: Icon(
+                        Icons.filter_alt,
+                        color: kWhite,
+                        size: 30,
+                      ));
+                }else{
+                  return SizedBox();
+                }
+                },
+              );
             } else {
               return SizedBox();
             }

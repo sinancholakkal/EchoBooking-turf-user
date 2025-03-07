@@ -106,7 +106,7 @@ PersistentBottomSheetController filterBottumSheet({
                     builder: (context, selectedIndex, child) {
                       return Wrap(
                         spacing: 10,
-                        children: List.generate(3, (index) {
+                        children: List.generate(choiceList.length, (index) {
                           return ChoiceChip(
                             label: Text(choiceList[index]),
                             selected: selectedIndex == index,

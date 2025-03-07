@@ -1,5 +1,4 @@
 import 'package:echo_booking/core/theme/colors.dart';
-import 'package:echo_booking/domain/repository/auth_service.dart';
 import 'package:echo_booking/feature/presentation/bloc/auth_bloc/auth_bloc_bloc.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/home_screen.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_login/widget/heading_part_widget.dart';

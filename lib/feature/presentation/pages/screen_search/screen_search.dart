@@ -13,13 +13,8 @@ class ScreenSearch extends StatefulWidget {
 }
 class _ScreenSearchState extends State<ScreenSearch> {
   late TextEditingController _searchController;
-  RangeValues _currentRangeValues = const RangeValues(500, 2000);
+  RangeValues currentRangeValues = const RangeValues(500, 2000);
   ValueNotifier<int?> selectedChipIndex = ValueNotifier<int?>(null);
-  List<String> choiceList = [
-    "Football",
-    "Cricket",
-    "Otheres",
-  ];
   @override
   void initState() {
     context.read<TurfBloc>().add(TurfFetchEvent());
@@ -44,8 +39,7 @@ class _ScreenSearchState extends State<ScreenSearch> {
           //Top itemes(Back arrow, Search field, Text to speech and filter icon).............
           SearchTopItemsWidget(
               searchController: _searchController,
-              choiceList: choiceList,
-              currentRangeValues: _currentRangeValues,
+              currentRangeValues: currentRangeValues,
               selectedChipIndex: selectedChipIndex),
           //Display turfs(Initial turfs and search results)-----------
           TurfDisplayPartWidget(screenWidth: screenWidth)
