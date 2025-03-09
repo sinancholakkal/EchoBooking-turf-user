@@ -19,7 +19,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
       (event, emit) async {
         bool? result;
         try {
-          await Future.delayed(Duration(seconds: 2), () {
+          await Future.delayed(Duration(milliseconds: 2200), () {
             result = _authService.checkLoginStatus();
           });
 

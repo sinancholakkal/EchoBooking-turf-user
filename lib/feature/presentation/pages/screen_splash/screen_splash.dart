@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as bloc;
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 class ScreenSplash extends StatefulWidget {
   const ScreenSplash({super.key});
@@ -39,10 +40,7 @@ class _ScreenSplashState extends State<ScreenSplash> {
       child: Scaffold(
         backgroundColor: backGroundColor,
         body: Center(
-          child: Text(
-            "Loading",
-            style: TextStyle(color: kWhite, fontSize: 18),
-          ),
+          child: Lottie.asset('asset/splash.json'),
         ),
       ),
     );

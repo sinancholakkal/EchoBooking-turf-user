@@ -23,7 +23,7 @@ class TurfBloc extends Bloc<TurfEvent, TurfState> {
         }
         
       }catch(e){
-        log("somthing wrong while fetching all turfs $e ===================");
+        log("somthing wrong while fetching all turfs haha $e ===================");
       }
     });
   }

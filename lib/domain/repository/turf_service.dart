@@ -11,7 +11,7 @@ class TurfService {
   //Fetching turfs for review------------------
   Future<List<List<TurfModel>>> fetchAllTurfs() async {
     log("Fetch all event called========");
-    double max1 = -1, max2 = -1, max3 = -1, max4 = -1;
+    num max1 = -1, max2 = -1, max3 = -1, max4 = -1;
     TurfModel? obj1,obj2,obj3,obj4;
     final instance = FirebaseFirestore.instance;
     List<List<TurfModel>> turfs = [
@@ -22,8 +22,9 @@ class TurfService {
 
     final ownerSnap = await instance.collection("owner").get();
 
-    for (var ownerDoc in ownerSnap.docs) {
-      log(ownerDoc.id);
+   try{
+     for (var ownerDoc in ownerSnap.docs) {
+      log("${ownerDoc.id} ================");
       final ownerData = ownerDoc.data();
       final turfColl = ownerDoc.reference.collection("turfs");
       final turfDocs = await turfColl.get();
@@ -52,9 +53,11 @@ class TurfService {
                 reviewStatus: turfData['reviewStatus'],
                 images: turfData["images"]);
             if (turfModel.catogery == "Football") {
+              log("==type football");
               turfs[0].add(turfModel);
             } else {
               turfs[1].add(turfModel);
+               log("==type cricket");
             }
             turfModel.ownerId;
             final review = await turfColl
@@ -62,7 +65,7 @@ class TurfService {
                 .collection('review')
                 .doc(turfModel.turfId)
                 .get();
-            final starCount = review.data()?['starcount'] ?? 0;
+            num starCount = review.data()?['starcount'] ?? 0;
             if (starCount == 0) continue;
             
             if (starCount > max1) {
@@ -98,11 +101,14 @@ class TurfService {
     if(obj2!=null)turfs[2].add(obj2);
     if(obj3!=null)turfs[2].add(obj3);
     if(obj4!=null)turfs[2].add(obj4);
+   }catch(e){
+log("Somthing wrong while fetch all turfss $e");
+   }
     return turfs;
   }
 
   Future<List<TurfModel>> fetchTurfStars() async {
-    log("Fetch all event called========");
+    log("Fetch all star(fav)========");
     final instance = FirebaseFirestore.instance;
     List<TurfModel> turfs = [];
 
