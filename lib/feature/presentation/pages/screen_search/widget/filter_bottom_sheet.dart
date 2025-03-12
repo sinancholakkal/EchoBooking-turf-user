@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:echo_booking/core/constent/size/size.dart';
 import 'package:echo_booking/core/theme/colors.dart';
 import 'package:echo_booking/feature/presentation/bloc/search_bloc/search_bloc.dart';
 import 'package:echo_booking/feature/presentation/widgets/text_widget.dart';
@@ -9,8 +10,8 @@ import 'package:get/get.dart';
 
 PersistentBottomSheetController filterBottumSheet({
   required BuildContext context,
-  required String? date,
-  required String? time,
+  required ValueNotifier<String?> date,
+  required ValueNotifier<String?> time,
   required TextEditingController searchController,
   required ValueNotifier<int?> selectedChipIndex,
   required RangeValues currentRangeValues,
@@ -24,7 +25,7 @@ PersistentBottomSheetController filterBottumSheet({
       return StatefulBuilder(
         builder: (context, setModalState) {
           return SizedBox(
-            height: 500,
+            height: 600,
             width: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,9 +41,17 @@ PersistentBottomSheetController filterBottumSheet({
                             Icons.arrow_back,
                             color: kWhite,
                           )),
+                          Spacer(),
+                          OutlinedButton(onPressed: (){
+                      selectedChipIndex.value = null;
+                      date.value = null;
+                      time.value = null;
+                    }, child: Text("Clear")),
+                    width10,
                       //Done button-----------
-                      TextButton(
+                      OutlinedButton(
                           onPressed: () {
+                            //selectedChipIndex.value = selectedChipIndex.value;
                             searchController.text =
                                 (selectedChipIndex.value != null)
                                     ? choiceList[selectedChipIndex.value!]
@@ -53,10 +62,9 @@ PersistentBottomSheetController filterBottumSheet({
                                   "search": searchController.text,
                                   "startprice":
                                       currentRangeValues.start.toString(),
-                                  "endprice":
-                                      currentRangeValues.end.toString(),
-                                  "date": date ?? "null",
-                                  "time": time ?? "null",
+                                  "endprice": currentRangeValues.end.toString(),
+                                  "date": date.value ?? "null",
+                                  "time": time.value ?? "null",
                                 }));
                             Get.back();
                             log(date.toString());
@@ -77,20 +85,41 @@ PersistentBottomSheetController filterBottumSheet({
                     currentRangeValues = (state is RangeValueLoadedState)
                         ? state.rangeValue
                         : currentRangeValues;
-                    return RangeSlider(
-                      min: 0,
-                      max: 2000,
-                      divisions: 10,
-                      values: currentRangeValues,
-                      labels: RangeLabels(
-                        currentRangeValues.start.round().toString(),
-                        currentRangeValues.end.round().toString(),
-                      ),
-                      onChanged: (value) {
-                        context
-                            .read<SearchBloc>()
-                            .add(RangeValueEvent(rangeValue: value));
-                      },
+                    return Column(
+                      children: [
+                        RangeSlider(
+                          min: 0,
+                          max: 2000,
+                          divisions: 10,
+                          values: currentRangeValues,
+                          labels: RangeLabels(
+                            currentRangeValues.start.round().toString(),
+                            currentRangeValues.end.round().toString(),
+                          ),
+                          onChanged: (value) {
+                            context
+                                .read<SearchBloc>()
+                                .add(RangeValueEvent(rangeValue: value));
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextWidget(
+                                text:
+                                    currentRangeValues.start.toInt().toString(),
+                                size: 18,
+                              ),
+                              TextWidget(
+                                text: currentRangeValues.end.toInt().toString(),
+                                size: 18,
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
                     );
                   },
                 ),
@@ -136,15 +165,20 @@ PersistentBottomSheetController filterBottumSheet({
                 BlocBuilder<SearchBloc, SearchState>(
                   builder: (context, state) {
                     if (state is DatePickerSuccessState) {
-                      date = state.date;
+                      date.value = state.date;
                     }
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: TextWidget(
-                        text: (date != null) ? date! : "No date selected",
-                        fontWeight: FontWeight.normal,
-                        size: 18,
-                      ),
+                    return ValueListenableBuilder(
+                      valueListenable: date,
+                      builder: (context, dateValue, child) {
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: TextWidget(
+                            text: dateValue ?? "No date selected",
+                            fontWeight: FontWeight.normal,
+                            size: 18,
+                          ),
+                        );
+                      },
                     );
                   },
                 ),
@@ -172,40 +206,39 @@ PersistentBottomSheetController filterBottumSheet({
                 BlocBuilder<SearchBloc, SearchState>(
                   builder: (context, state) {
                     if (state is TimePickerSuccessState) {
-                      time = "${state.hour}:${state.minute}";
+                      time.value = "${state.hour}:${state.minute}";
                     }
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: TextWidget(
-                        text: (time != null) ? time! : "No time selected",
-                        fontWeight: FontWeight.normal,
-                        size: 18,
-                      ),
+                    return ValueListenableBuilder(
+                      valueListenable: time,
+                      builder: (context, timeValue, child) {
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: TextWidget(
+                            text: timeValue ?? "No time selected",
+                            fontWeight: FontWeight.normal,
+                            size: 18,
+                          ),
+                        );
+                      },
                     );
                   },
                 ),
-                BlocBuilder<SearchBloc, SearchState>(
-                  builder: (context, state) {
-                    return OutlinedButton(
-                        onPressed: () {
-                          if ((state is DatePickerSuccessState ||
-                              state is TimePickerSuccessState)) {
-                            context
-                                .read<SearchBloc>()
-                                .add(TimePickerEvent(context: context));
-                          }
-                        },
-                        child: TextWidget(
-                          text: "Select Time",
-                          color: (state is DatePickerSuccessState ||
-                                  state is TimePickerSuccessState)
-                              ? kWhite
-                              : Colors.grey,
-                          fontWeight: FontWeight.normal,
-                          size: 18,
-                        ));
-                  },
-                )
+                OutlinedButton(
+                    onPressed: () {
+                      if (date.value != null) {
+                        context
+                            .read<SearchBloc>()
+                            .add(TimePickerEvent(context: context));
+                      }
+                    },
+                    child: TextWidget(
+                      text: "Select Time",
+                      color: date.value != null ? kWhite : Colors.grey,
+                      fontWeight: FontWeight.normal,
+                      size: 18,
+                    )),
+                    height10,
+                    
               ],
             ),
           );

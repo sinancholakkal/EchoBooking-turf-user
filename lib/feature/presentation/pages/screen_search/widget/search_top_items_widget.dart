@@ -11,7 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
 class SearchTopItemsWidget extends StatefulWidget {
-  const SearchTopItemsWidget({
+   SearchTopItemsWidget({
     super.key,
     required TextEditingController searchController,
     required RangeValues currentRangeValues,
@@ -23,11 +23,14 @@ class SearchTopItemsWidget extends StatefulWidget {
   final RangeValues _currentRangeValues;
   final ValueNotifier<int?> selectedChipIndex;
 
+
   @override
   State<SearchTopItemsWidget> createState() => _SearchTopItemsWidgetState();
 }
 
 class _SearchTopItemsWidgetState extends State<SearchTopItemsWidget> {
+    ValueNotifier<String?>date = ValueNotifier(null);
+    ValueNotifier<String?>time = ValueNotifier(null);
   @override
   void initState() {
     context.read<CategoryBloc>().add(FetchCategory());
@@ -92,8 +95,6 @@ class _SearchTopItemsWidgetState extends State<SearchTopItemsWidget> {
                 if(state is CategoryLoadedState){
                   return IconButton(
                       onPressed: () {
-                        String? date;
-                        String? time;
                         //Show  bottom sheet------
                         filterBottumSheet(
                           context: context,

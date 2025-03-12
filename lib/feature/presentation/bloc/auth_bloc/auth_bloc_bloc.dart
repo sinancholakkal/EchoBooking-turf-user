@@ -1,14 +1,9 @@
 import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
-import 'package:echo_booking/domain/model/user_model.dart';
 import 'package:echo_booking/domain/repository/auth_service.dart';
-import 'package:echo_booking/feature/presentation/widgets/showDiolog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-
 part 'auth_bloc_event.dart';
 part 'auth_bloc_state.dart';
 
