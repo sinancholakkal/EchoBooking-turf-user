@@ -29,48 +29,30 @@ class CarouselSlideBuilderWidget extends StatelessWidget {
           onTap: () {
             _openFullScreen(context, index);
           },
-          child: Stack(
-            children: [
-              // Carousel image displaying--------------------
-              Container(
-                width: screenWidth * 9,
-                height: 200,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(cardRadius),
-                ),
-                child: (index == 0)
-                    ? Hero(
-                        tag: widget.tag,
-                        child: ClipRRect(
-                          borderRadius:
-                              BorderRadius.circular(cardRadius),
-                          child: Image.network(
-                            fit: BoxFit.cover,
-                            widget.turfmodel.images[index],
-                          ),
-                        ))
-                    : ClipRRect(
-                        borderRadius: BorderRadius.circular(cardRadius),
-                        child: Image.network(
-                          fit: BoxFit.cover,
-                          widget.turfmodel.images[index],
-                        ),
-                      )
-              ),
-              // View details button on the carousel------------------
-              Positioned(
-                right: 14,
-                bottom: 10,
-                child: CustomButton(
-                  text: "View details",
-                  width: 90,
-                  height: 32,
-                  textStyle: TextStyle(fontSize: 12, color: kWhite),
-                  radius: 10,
-                  color: kblue,
-                ),
-              ),
-            ],
+          child: Container(
+            width: screenWidth * 9,
+            height: 200,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(cardRadius),
+            ),
+            child: (index == 0)
+                ? Hero(
+                    tag: widget.tag,
+                    child: ClipRRect(
+                      borderRadius:
+                          BorderRadius.circular(cardRadius),
+                      child: Image.network(
+                        fit: BoxFit.cover,
+                        widget.turfmodel.images[index],
+                      ),
+                    ))
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(cardRadius),
+                    child: Image.network(
+                      fit: BoxFit.cover,
+                      widget.turfmodel.images[index],
+                    ),
+                  )
           ),
         );
       },

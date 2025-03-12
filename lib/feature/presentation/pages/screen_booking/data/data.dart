@@ -13,9 +13,9 @@ class ScreenBookingData {
     return [
       {"Time": time},
       {"Book amount": "₹${turfModel.price}"},
-      {"Taxes & fees": taxesAndFee.toString()},
+      {"Taxes & fees": "₹${taxesAndFee.toString()}"},
       {
-        "Total Price": "${taxesAndFee + int.parse(turfModel.price)}",
+        "Total Price": "₹${taxesAndFee + int.parse(turfModel.price)}",
       }
     ];
   }

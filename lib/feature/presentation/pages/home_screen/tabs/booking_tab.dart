@@ -32,7 +32,10 @@ class _BookingTabState extends State<BookingTab> {
           return CircularWidget();
         } else if (state is FetchLoadedState) {
           final List<BookingTurfmodel> turfs = state.bookingTurfModels;
-          return ListView.builder(
+          if(turfs.isEmpty){
+            return Center(child: TextWidget(text: "Not yet",color: kWhite,),);
+          }else{
+            return ListView.builder(
             itemCount: turfs.length,
             itemBuilder: (context, index) {
               //log(state.starTurfs.length.toString());
@@ -44,6 +47,8 @@ class _BookingTabState extends State<BookingTab> {
                   type: ActionTypeFrom.booking);
             },
           );
+          }
+          
         } else {
           return SizedBox();
         }
