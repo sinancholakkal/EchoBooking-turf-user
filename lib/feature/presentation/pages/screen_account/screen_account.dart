@@ -6,9 +6,7 @@ import 'package:echo_booking/feature/presentation/pages/screen_account/widget/lo
 import 'package:echo_booking/feature/presentation/pages/screen_account/widget/profile_card_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_account/widget/profile_items_widget.dart';
 import 'package:echo_booking/feature/presentation/pages/screen_personal_details_update/screen_personal_details.dart';
-import 'package:echo_booking/feature/presentation/pages/screen_welcome/screen_welcome.dart';
-import 'package:echo_booking/feature/presentation/widgets/alert_dialog_widget.dart';
-import 'package:echo_booking/feature/presentation/widgets/loading_widget.dart';
+import 'package:echo_booking/feature/presentation/pages/screen_privacy_policy/screen_privacy_policy.dart';
 import 'package:echo_booking/feature/presentation/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as bloc;
@@ -54,15 +52,18 @@ class ScreenAccount extends StatelessWidget {
           height22,
           //About--------------------
           ProfileItemsWidget(
-            text: "About",
+            text: "Privacy Policy",
             icon: Icons.info,
             screenWidth: screenWidth,
+            onTap: () =>Get.to(() => ScreenPrivacyPolicy(),
+                transition: Transition.cupertino,duration: Duration(milliseconds: 800)),
           ),
-          SizedBox(
-            height: 22,
-          ),
+          height22,
           // Long out----------
           LogOutWidget(screenWidth: screenWidth),
+          Spacer(flex: 2,),
+          TextWidget(text: "version: 1.0.1",color: kGrey,size: 16,),
+          Spacer(flex: 1,)
         ],
       ),
     );
