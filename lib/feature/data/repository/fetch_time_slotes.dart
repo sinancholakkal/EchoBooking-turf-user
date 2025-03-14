@@ -3,9 +3,11 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:echo_booking/domain/model/turf_model.dart';
 import 'package:echo_booking/feature/presentation/pages/home_screen/widgets/card_turf_widget.dart';
+import 'package:intl/intl.dart';
 
 Future<Map<String, List<Map<String, dynamic>>>> fetchingTimeSlots(
     {required TurfModel turfmodel, required ActionTypeFrom type}) async {
+      log("Fetching time slotes,.....");
   final snapshotRef = FirebaseFirestore.instance
       .collection(ActionTypeFrom.noStar == type ? "owner" : "userApp")
       .doc(turfmodel.ownerId)
@@ -21,10 +23,12 @@ Future<Map<String, List<Map<String, dynamic>>>> fetchingTimeSlots(
 
     Map<String, dynamic> timeData = timeSlot.data();
     int date = int.parse(dateKey.split("-")[2]);
+    log(date.toString());
     int currentDate = DateTime.now().day;
     int month = int.parse(dateKey.split("-")[1]);
       int todayMonth = DateTime.now().month;
-    if (date >= currentDate ) {
+    try{
+      if (date >= currentDate ) {
       if(month>=todayMonth){
         if (!timeSlotsMap.containsKey(dateKey)) {
         timeSlotsMap[dateKey] = [];
@@ -35,10 +39,14 @@ Future<Map<String, List<Map<String, dynamic>>>> fetchingTimeSlots(
 
         for (var slot in timeSlotList) {
           if (slot is Map<String, dynamic>) {
-            String dateAndTime =
-                "$dateKey ${slot['time'].toString().split(" ")[2]}";
+            //log(slot['time']);
+            String timeString = slot['time'].toString().split(" ")[2];
+            timeString = timeString.replaceAll('\u202F', ' ').replaceAll('\u00A0', ' ').trim();
+            String dateAndTime = "$dateKey $timeString";
+                log("$dateAndTime ===========");
            
-            DateTime givenTime = DateTime.parse(dateAndTime);
+            DateTime givenTime = DateFormat("yyyy-MM-dd hh:mm a").parse(dateAndTime);
+            log(givenTime.toString());
             DateTime currentTime = DateTime.now();
             if (givenTime.isBefore(currentTime)) {
                log(dateAndTime);
@@ -61,6 +69,9 @@ Future<Map<String, List<Map<String, dynamic>>>> fetchingTimeSlots(
     } else {
       await snapshotRef.doc(dateKey).delete();
       log("$date deleted----------");
+    }
+    }catch(e){
+      log("Somthing issue while fetching time $e");
     }
   }
   return timeSlotsMap;

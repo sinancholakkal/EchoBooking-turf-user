@@ -29,7 +29,6 @@ class DatePickerSuccessState extends SearchState{
   DatePickerSuccessState({required this.date});
 }
 class TimePickerSuccessState extends SearchState{
-  String hour;
-  String minute;
-  TimePickerSuccessState({required this.hour,required this.minute});
+  String pickDate;
+  TimePickerSuccessState({required this.pickDate});
 }

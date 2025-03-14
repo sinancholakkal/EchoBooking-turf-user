@@ -41,16 +41,19 @@ PersistentBottomSheetController filterBottumSheet({
                             Icons.arrow_back,
                             color: kWhite,
                           )),
-                          Spacer(),
-                          OutlinedButton(onPressed: (){
-                      selectedChipIndex.value = null;
-                      date.value = null;
-                      time.value = null;
-                    }, child: Text("Clear")),
-                    width10,
+                      Spacer(),
+                      OutlinedButton(
+                          onPressed: () {
+                            selectedChipIndex.value = null;
+                            date.value = null;
+                            time.value = null;
+                          },
+                          child: Text("Clear")),
+                      width10,
                       //Done button-----------
                       OutlinedButton(
                           onPressed: () {
+                            log("${time.value} **********************");
                             //selectedChipIndex.value = selectedChipIndex.value;
                             searchController.text =
                                 (selectedChipIndex.value != null)
@@ -165,7 +168,10 @@ PersistentBottomSheetController filterBottumSheet({
                 BlocBuilder<SearchBloc, SearchState>(
                   builder: (context, state) {
                     if (state is DatePickerSuccessState) {
-                      date.value = state.date;
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        date.value =
+                            state.date;
+                      });
                     }
                     return ValueListenableBuilder(
                       valueListenable: date,
@@ -191,6 +197,7 @@ PersistentBottomSheetController filterBottumSheet({
                         context
                             .read<SearchBloc>()
                             .add(DatePickerEvent(context: context));
+                        setModalState(() {});
                       },
                       child: TextWidget(
                         text: "Select Date",
@@ -206,7 +213,7 @@ PersistentBottomSheetController filterBottumSheet({
                 BlocBuilder<SearchBloc, SearchState>(
                   builder: (context, state) {
                     if (state is TimePickerSuccessState) {
-                      time.value = "${state.hour}:${state.minute}";
+                      time.value = state.pickDate;
                     }
                     return ValueListenableBuilder(
                       valueListenable: time,
@@ -223,22 +230,26 @@ PersistentBottomSheetController filterBottumSheet({
                     );
                   },
                 ),
-                OutlinedButton(
-                    onPressed: () {
-                      if (date.value != null) {
-                        context
-                            .read<SearchBloc>()
-                            .add(TimePickerEvent(context: context));
-                      }
-                    },
-                    child: TextWidget(
-                      text: "Select Time",
-                      color: date.value != null ? kWhite : Colors.grey,
-                      fontWeight: FontWeight.normal,
-                      size: 18,
-                    )),
-                    height10,
-                    
+                ValueListenableBuilder(
+                  valueListenable: date,
+                  builder: (context, value, child) {
+                    return OutlinedButton(
+                        onPressed: () {
+                          if (value != null) {
+                            context
+                                .read<SearchBloc>()
+                                .add(TimePickerEvent(context: context));
+                          }
+                        },
+                        child: TextWidget(
+                          text: "Select Time",
+                          color: value != null ? kWhite : Colors.grey,
+                          fontWeight: FontWeight.normal,
+                          size: 18,
+                        ));
+                  },
+                ),
+                height10,
               ],
             ),
           );

@@ -76,9 +76,20 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         initialEntryMode: TimePickerEntryMode.input,
         initialTime: initialTime,
       );
-      if(timeOfDay !=null){
+      if (timeOfDay != null) {
         log("${timeOfDay.hour} ${timeOfDay.minute}");
-        emit(TimePickerSuccessState(hour: (timeOfDay.hour>=10)?timeOfDay.hour.toString():"0${timeOfDay.hour}", minute: (timeOfDay.minute>=10)?timeOfDay.minute.toString():"${timeOfDay.minute}0"));
+        int hour = timeOfDay.hour;
+        int minute = timeOfDay.minute;
+
+        String period = hour >= 12 ? "PM" : "AM";
+        int hour12 = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
+
+        String formattedHour = hour12 < 10 ? "0$hour12" : "$hour12";
+        String formattedMinute = minute < 10 ? "0$minute" : "$minute";
+
+        String formattedTime = "$formattedHour:$formattedMinute $period";
+        log(formattedTime);
+        emit(TimePickerSuccessState(pickDate: formattedTime));
       }
     });
   }

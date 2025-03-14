@@ -62,7 +62,10 @@ class SearchServices {
 
                     for (var slot in timeSlotList) {
                       if (slot is Map<String, dynamic>) {
-                        if(slot['time'].toString().contains(time!)){
+                       String pTime = time!.replaceAll(RegExp(r'\s+'), ' '); 
+                       String dTime = slot['time'].toString().replaceAll(RegExp(r'\s+'), ' ');
+                        if(dTime.contains(pTime)){
+                          log("contaised");
                           flag =1;
                           break;
                         }

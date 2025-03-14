@@ -6,6 +6,7 @@ import 'package:echo_booking/domain/model/turf_model.dart';
 import 'package:echo_booking/domain/repository/auth_service.dart';
 import 'package:echo_booking/domain/repository/user_service.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TurfService {
   //Fetching turfs for review------------------
@@ -204,9 +205,15 @@ log("Somthing wrong while fetch all turfss $e");
 
     for (var turfData in snapshot.docs) {
       final turf = turfData.data();
-      String dateAndTime =
-          "${turf['slotdate']} ${turf['bookingtime'].toString().split(" ")[2]}";
-      DateTime givenTime = DateTime.parse(dateAndTime);
+      // String dateAndTime =
+      //     "${turf['slotdate']} ${turf['bookingtime'].toString().split(" ")[2]}";
+          String timeString = turf['bookingtime'].toString().split(" ")[2];
+            timeString = timeString.replaceAll('\u202F', ' ').replaceAll('\u00A0', ' ').trim();
+            String dateAndTime = "${turf['slotdate']} $timeString";
+
+      DateTime givenTime = DateFormat("yyyy-MM-dd hh:mm a").parse(dateAndTime);
+
+      log(givenTime.toString());
       DateTime currentTime = DateTime.now();
       String status = "";
       if (givenTime.isAfter(currentTime)) {
@@ -214,8 +221,8 @@ log("Somthing wrong while fetch all turfss $e");
       } else {
         status = "Closed";
       }
-      log(currentTime.toString());
-      log(givenTime.toString());
+      // log(currentTime.toString());
+      // log(givenTime.toString());
       log(status);
       final bookingTurfModel = BookingTurfmodel(
           bookingId: turf['bookingid'] ?? "booking id null",
