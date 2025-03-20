@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TextFieldsAndSaveButtonWidget extends StatelessWidget {
-  const TextFieldsAndSaveButtonWidget({
+   TextFieldsAndSaveButtonWidget({
     super.key,
     required TextEditingController name,
     required TextEditingController address,
@@ -23,12 +23,13 @@ class TextFieldsAndSaveButtonWidget extends StatelessWidget {
   final TextEditingController _name;
   final TextEditingController _address;
   final TextEditingController _phone;
-  final String? gender;
+  ValueNotifier<String?>gender;
   final GlobalKey<FormState> _formKey;
   final UserModel? data;
 
   @override
   Widget build(BuildContext context) {
+    log("$gender 555555555555555");
     return SizedBox(
       child: Column(
         children: [
@@ -61,25 +62,31 @@ class TextFieldsAndSaveButtonWidget extends StatelessWidget {
       },
     ),
     //submit button---------------
-    ElevatedButton(
-        onPressed: () {
-          log("$gender================");
-          if (_formKey.currentState!.validate()) {
-            print(" Validated--------------------");
-            UserModel userModel = UserModel(
-              name: _name.text,
-              phone: _phone.text,
-              address: _address.text,
-              uid: data!.uid,
-              gender: gender!,
-            );
-            context.read<UserBloc>().add(
-                UserDataUpdateEvent(userModel: userModel));
-          } else {
-            print("Not Validated--------------------");
-          }
-        },
-        child: Text("Update"))
+    ValueListenableBuilder(
+      valueListenable: gender,
+      builder: (context, gValue, child) {
+        return ElevatedButton(
+          onPressed: () {
+            log("$gender================");
+            if (_formKey.currentState!.validate()) {
+              print(" Validated--------------------");
+              UserModel userModel = UserModel(
+                name: _name.text,
+                phone: _phone.text,
+                address: _address.text,
+                uid: data!.uid,
+                gender: gValue !,
+              );
+              context.read<UserBloc>().add(
+                  UserDataUpdateEvent(userModel: userModel));
+            } else {
+              print("Not Validated--------------------");
+            }
+          },
+          child: Text("Update"))
+;      },
+    
+    )
         ],
       ),
     );

@@ -50,7 +50,7 @@ class ScreenAccount extends StatelessWidget {
                 transition: Transition.cupertino,duration: Duration(milliseconds: 800)),
           ),
           height22,
-          //About--------------------
+          //Privacy Policy--------------------
           ProfileItemsWidget(
             text: "Privacy Policy",
             icon: Icons.info,

@@ -20,7 +20,7 @@ class _ScreenPersonalDetailsState extends State<ScreenPersonalDetails> {
   late TextEditingController _phone;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late FixedExtentScrollController _scrollController;
-  String? gender;
+  ValueNotifier<String?>gender = ValueNotifier(null);
 
   @override
   void initState() {
@@ -61,7 +61,7 @@ class _ScreenPersonalDetailsState extends State<ScreenPersonalDetails> {
                 _name.text = data!.name;
                 _address.text = data.address;
                 _phone.text = data.phone;
-                gender = data.gender;
+                gender.value = data.gender;
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   _scrollController.jumpToItem((data.gender == "boy") ? 0 : 1);
                 });
@@ -81,8 +81,10 @@ class _ScreenPersonalDetailsState extends State<ScreenPersonalDetails> {
                             physics: FixedExtentScrollPhysics(),
                             perspective: 0.009,
                             onSelectedItemChanged: (val) {
+                              
+                              gender.value = (val == 0) ? "boy" : "girl";
                               log(val.toString());
-                              gender = (val == 0) ? "boy" : "girl";
+                              log(gender.value.toString());
                             },
                             itemExtent: 100,
                             children: [
@@ -93,6 +95,9 @@ class _ScreenPersonalDetailsState extends State<ScreenPersonalDetails> {
                           ),
                         ),
                       ),
+                      TextButton(onPressed: (){
+                        log("$gender 8888888888888");
+                      }, child: Text("Test")),
                       //Fields and update button----------
                       TextFieldsAndSaveButtonWidget(name: _name, address: _address, phone: _phone, gender: gender, formKey: _formKey, data: data)
                     ],
