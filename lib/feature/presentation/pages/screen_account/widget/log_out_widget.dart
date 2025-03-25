@@ -17,7 +17,7 @@ class LogOutWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProfileItemsWidget(
-      text: "Long out",
+      text: "Logout",
       icon: Icons.exit_to_app,
       screenWidth: screenWidth,
       onTap: () {

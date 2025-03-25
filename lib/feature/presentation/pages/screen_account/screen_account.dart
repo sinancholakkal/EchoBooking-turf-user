@@ -59,7 +59,7 @@ class ScreenAccount extends StatelessWidget {
                 transition: Transition.cupertino,duration: Duration(milliseconds: 800)),
           ),
           height22,
-          // Long out----------
+          // Logout----------
           LogOutWidget(screenWidth: screenWidth),
           Spacer(flex: 2,),
           TextWidget(text: "version: 1.0.1",color: kGrey,size: 16,),
